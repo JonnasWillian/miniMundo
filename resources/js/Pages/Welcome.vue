@@ -1,386 +1,1412 @@
-<script setup>
-import { Head, Link } from '@inertiajs/vue3';
-
-defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
-});
-
-function handleImageError() {
-    document.getElementById('screenshot-container')?.classList.add('!hidden');
-    document.getElementById('docs-card')?.classList.add('!row-span-1');
-    document.getElementById('docs-card-content')?.classList.add('!flex-row');
-    document.getElementById('background')?.classList.add('!hidden');
-}
-</script>
-
 <template>
-    <Head title="Welcome" />
-    <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-        <img
-            id="background"
-            class="absolute -left-20 top-0 max-w-[877px]"
-            src="https://laravel.com/assets/img/welcome/background.svg"
-        />
-        <div
-            class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
-        >
-            <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                <header
-                    class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3"
-                >
-                    <div class="flex lg:col-start-2 lg:justify-center">
-                        <svg
-                            class="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]"
-                            viewBox="0 0 62 65"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M61.8548 14.6253C61.8778 14.7102 61.8895 14.7978 61.8897 14.8858V28.5615C61.8898 28.737 61.8434 28.9095 61.7554 29.0614C61.6675 29.2132 61.5409 29.3392 61.3887 29.4265L49.9104 36.0351V49.1337C49.9104 49.4902 49.7209 49.8192 49.4118 49.9987L25.4519 63.7916C25.3971 63.8227 25.3372 63.8427 25.2774 63.8639C25.255 63.8714 25.2338 63.8851 25.2101 63.8913C25.0426 63.9354 24.8666 63.9354 24.6991 63.8913C24.6716 63.8838 24.6467 63.8689 24.6205 63.8589C24.5657 63.8389 24.5084 63.8215 24.456 63.7916L0.501061 49.9987C0.348882 49.9113 0.222437 49.7853 0.134469 49.6334C0.0465019 49.4816 0.000120578 49.3092 0 49.1337L0 8.10652C0 8.01678 0.0124642 7.92953 0.0348998 7.84477C0.0423783 7.8161 0.0598282 7.78993 0.0697995 7.76126C0.0884958 7.70891 0.105946 7.65531 0.133367 7.6067C0.152063 7.5743 0.179485 7.54812 0.20192 7.51821C0.230588 7.47832 0.256763 7.43719 0.290416 7.40229C0.319084 7.37362 0.356476 7.35243 0.388883 7.32751C0.425029 7.29759 0.457436 7.26518 0.498568 7.2415L12.4779 0.345059C12.6296 0.257786 12.8015 0.211853 12.9765 0.211853C13.1515 0.211853 13.3234 0.257786 13.475 0.345059L25.4531 7.2415H25.4556C25.4955 7.26643 25.5292 7.29759 25.5653 7.32626C25.5977 7.35119 25.6339 7.37362 25.6625 7.40104C25.6974 7.43719 25.7224 7.47832 25.7523 7.51821C25.7735 7.54812 25.8021 7.5743 25.8196 7.6067C25.8483 7.65656 25.8645 7.70891 25.8844 7.76126C25.8944 7.78993 25.9118 7.8161 25.9193 7.84602C25.9423 7.93096 25.954 8.01853 25.9542 8.10652V33.7317L35.9355 27.9844V14.8846C35.9355 14.7973 35.948 14.7088 35.9704 14.6253C35.9792 14.5954 35.9954 14.5692 36.0053 14.5405C36.0253 14.4882 36.0427 14.4346 36.0702 14.386C36.0888 14.3536 36.1163 14.3274 36.1375 14.2975C36.1674 14.2576 36.1923 14.2165 36.2272 14.1816C36.2559 14.1529 36.292 14.1317 36.3244 14.1068C36.3618 14.0769 36.3942 14.0445 36.4341 14.0208L48.4147 7.12434C48.5663 7.03694 48.7383 6.99094 48.9133 6.99094C49.0883 6.99094 49.2602 7.03694 49.4118 7.12434L61.3899 14.0208C61.4323 14.0457 61.4647 14.0769 61.5021 14.1055C61.5333 14.1305 61.5694 14.1529 61.5981 14.1803C61.633 14.2165 61.6579 14.2576 61.6878 14.2975C61.7103 14.3274 61.7377 14.3536 61.7551 14.386C61.7838 14.4346 61.8 14.4882 61.8199 14.5405C61.8312 14.5692 61.8474 14.5954 61.8548 14.6253ZM59.893 27.9844V16.6121L55.7013 19.0252L49.9104 22.3593V33.7317L59.8942 27.9844H59.893ZM47.9149 48.5566V37.1768L42.2187 40.4299L25.953 49.7133V61.2003L47.9149 48.5566ZM1.99677 9.83281V48.5566L23.9562 61.199V49.7145L12.4841 43.2219L12.4804 43.2194L12.4754 43.2169C12.4368 43.1945 12.4044 43.1621 12.3682 43.1347C12.3371 43.1097 12.3009 43.0898 12.2735 43.0624L12.271 43.0586C12.2386 43.0275 12.2162 42.9888 12.1887 42.9539C12.1638 42.9203 12.1339 42.8916 12.114 42.8567L12.1127 42.853C12.0903 42.8156 12.0766 42.7707 12.0604 42.7283C12.0442 42.6909 12.023 42.656 12.013 42.6161C12.0005 42.5688 11.998 42.5177 11.9931 42.4691C11.9881 42.4317 11.9781 42.3943 11.9781 42.3569V15.5801L6.18848 12.2446L1.99677 9.83281ZM12.9777 2.36177L2.99764 8.10652L12.9752 13.8513L22.9541 8.10527L12.9752 2.36177H12.9777ZM18.1678 38.2138L23.9574 34.8809V9.83281L19.7657 12.2459L13.9749 15.5801V40.6281L18.1678 38.2138ZM48.9133 9.14105L38.9344 14.8858L48.9133 20.6305L58.8909 14.8846L48.9133 9.14105ZM47.9149 22.3593L42.124 19.0252L37.9323 16.6121V27.9844L43.7219 31.3174L47.9149 33.7317V22.3593ZM24.9533 47.987L39.59 39.631L46.9065 35.4555L36.9352 29.7145L25.4544 36.3242L14.9907 42.3482L24.9533 47.987Z"
-                                fill="currentColor"
-                            />
-                        </svg>
-                    </div>
-                    <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
-                        <Link
-                            v-if="$page.props.auth.user"
-                            :href="route('dashboard')"
-                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            Dashboard
-                        </Link>
-
-                        <template v-else>
-                            <Link
-                                :href="route('login')"
-                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                            >
-                                Log in
-                            </Link>
-
-                            <Link
-                                v-if="canRegister"
-                                :href="route('register')"
-                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                            >
-                                Register
-                            </Link>
-                        </template>
-                    </nav>
-                </header>
-
-                <main class="mt-6">
-                    <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                        <a
-                            href="https://laravel.com/docs"
-                            id="docs-card"
-                            class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] md:row-span-3 lg:p-10 lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                        >
-                            <div
-                                id="screenshot-container"
-                                class="relative flex w-full flex-1 items-stretch"
-                            >
-                                <img
-                                    src="https://laravel.com/assets/img/welcome/docs-light.svg"
-                                    alt="Laravel documentation screenshot"
-                                    class="aspect-video h-full w-full flex-1 rounded-[10px] object-cover object-top drop-shadow-[0px_4px_34px_rgba(0,0,0,0.06)] dark:hidden"
-                                    @error="handleImageError"
-                                />
-                                <img
-                                    src="https://laravel.com/assets/img/welcome/docs-dark.svg"
-                                    alt="Laravel documentation screenshot"
-                                    class="hidden aspect-video h-full w-full flex-1 rounded-[10px] object-cover object-top drop-shadow-[0px_4px_34px_rgba(0,0,0,0.25)] dark:block"
-                                />
-                                <div
-                                    class="absolute -bottom-16 -left-16 h-40 w-[calc(100%+8rem)] bg-gradient-to-b from-transparent via-white to-white dark:via-zinc-900 dark:to-zinc-900"
-                                ></div>
-                            </div>
-
-                            <div
-                                class="relative flex items-center gap-6 lg:items-end"
-                            >
-                                <div
-                                    id="docs-card-content"
-                                    class="flex items-start gap-6 lg:flex-col"
-                                >
-                                    <div
-                                        class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16"
-                                    >
-                                        <svg
-                                            class="size-5 sm:size-6"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                fill="#FF2D20"
-                                                d="M23 4a1 1 0 0 0-1.447-.894L12.224 7.77a.5.5 0 0 1-.448 0L2.447 3.106A1 1 0 0 0 1 4v13.382a1.99 1.99 0 0 0 1.105 1.79l9.448 4.728c.14.065.293.1.447.1.154-.005.306-.04.447-.105l9.453-4.724a1.99 1.99 0 0 0 1.1-1.789V4ZM3 6.023a.25.25 0 0 1 .362-.223l7.5 3.75a.251.251 0 0 1 .138.223v11.2a.25.25 0 0 1-.362.224l-7.5-3.75a.25.25 0 0 1-.138-.22V6.023Zm18 11.2a.25.25 0 0 1-.138.224l-7.5 3.75a.249.249 0 0 1-.329-.099.249.249 0 0 1-.033-.12V9.772a.251.251 0 0 1 .138-.224l7.5-3.75a.25.25 0 0 1 .362.224v11.2Z"
-                                            />
-                                            <path
-                                                fill="#FF2D20"
-                                                d="m3.55 1.893 8 4.048a1.008 1.008 0 0 0 .9 0l8-4.048a1 1 0 0 0-.9-1.785l-7.322 3.706a.506.506 0 0 1-.452 0L4.454.108a1 1 0 0 0-.9 1.785H3.55Z"
-                                            />
-                                        </svg>
-                                    </div>
-
-                                    <div class="pt-3 sm:pt-5 lg:pt-0">
-                                        <h2
-                                            class="text-xl font-semibold text-black dark:text-white"
-                                        >
-                                            Documentation
-                                        </h2>
-
-                                        <p class="mt-4 text-sm/relaxed">
-                                            Laravel has wonderful documentation
-                                            covering every aspect of the
-                                            framework. Whether you are a
-                                            newcomer or have prior experience
-                                            with Laravel, we recommend reading
-                                            our documentation from beginning to
-                                            end.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <svg
-                                    class="size-6 shrink-0 stroke-[#FF2D20]"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                    />
-                                </svg>
-                            </div>
-                        </a>
-
-                        <a
-                            href="https://laracasts.com"
-                            class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                        >
-                            <div
-                                class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16"
-                            >
-                                <svg
-                                    class="size-5 sm:size-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <g fill="#FF2D20">
-                                        <path
-                                            d="M24 8.25a.5.5 0 0 0-.5-.5H.5a.5.5 0 0 0-.5.5v12a2.5 2.5 0 0 0 2.5 2.5h19a2.5 2.5 0 0 0 2.5-2.5v-12Zm-7.765 5.868a1.221 1.221 0 0 1 0 2.264l-6.626 2.776A1.153 1.153 0 0 1 8 18.123v-5.746a1.151 1.151 0 0 1 1.609-1.035l6.626 2.776ZM19.564 1.677a.25.25 0 0 0-.177-.427H15.6a.106.106 0 0 0-.072.03l-4.54 4.543a.25.25 0 0 0 .177.427h3.783c.027 0 .054-.01.073-.03l4.543-4.543ZM22.071 1.318a.047.047 0 0 0-.045.013l-4.492 4.492a.249.249 0 0 0 .038.385.25.25 0 0 0 .14.042h5.784a.5.5 0 0 0 .5-.5v-2a2.5 2.5 0 0 0-1.925-2.432ZM13.014 1.677a.25.25 0 0 0-.178-.427H9.101a.106.106 0 0 0-.073.03l-4.54 4.543a.25.25 0 0 0 .177.427H8.4a.106.106 0 0 0 .073-.03l4.54-4.543ZM6.513 1.677a.25.25 0 0 0-.177-.427H2.5A2.5 2.5 0 0 0 0 3.75v2a.5.5 0 0 0 .5.5h1.4a.106.106 0 0 0 .073-.03l4.54-4.543Z"
-                                        />
-                                    </g>
-                                </svg>
-                            </div>
-
-                            <div class="pt-3 sm:pt-5">
-                                <h2
-                                    class="text-xl font-semibold text-black dark:text-white"
-                                >
-                                    Laracasts
-                                </h2>
-
-                                <p class="mt-4 text-sm/relaxed">
-                                    Laracasts offers thousands of video
-                                    tutorials on Laravel, PHP, and JavaScript
-                                    development. Check them out, see for
-                                    yourself, and massively level up your
-                                    development skills in the process.
-                                </p>
-                            </div>
-
-                            <svg
-                                class="size-6 shrink-0 self-center stroke-[#FF2D20]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                />
-                            </svg>
-                        </a>
-
-                        <a
-                            href="https://laravel-news.com"
-                            class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                        >
-                            <div
-                                class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16"
-                            >
-                                <svg
-                                    class="size-5 sm:size-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <g fill="#FF2D20">
-                                        <path
-                                            d="M8.75 4.5H5.5c-.69 0-1.25.56-1.25 1.25v4.75c0 .69.56 1.25 1.25 1.25h3.25c.69 0 1.25-.56 1.25-1.25V5.75c0-.69-.56-1.25-1.25-1.25Z"
-                                        />
-                                        <path
-                                            d="M24 10a3 3 0 0 0-3-3h-2V2.5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2V20a3.5 3.5 0 0 0 3.5 3.5h17A3.5 3.5 0 0 0 24 20V10ZM3.5 21.5A1.5 1.5 0 0 1 2 20V3a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 .5.5v17c0 .295.037.588.11.874a.5.5 0 0 1-.484.625L3.5 21.5ZM22 20a1.5 1.5 0 1 1-3 0V9.5a.5.5 0 0 1 .5-.5H21a1 1 0 0 1 1 1v10Z"
-                                        />
-                                        <path
-                                            d="M12.751 6.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 7.3v-.5a.75.75 0 0 1 .751-.753ZM12.751 10.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 11.3v-.5a.75.75 0 0 1 .751-.753ZM4.751 14.047h10a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-10A.75.75 0 0 1 4 15.3v-.5a.75.75 0 0 1 .751-.753ZM4.75 18.047h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-7.5A.75.75 0 0 1 4 19.3v-.5a.75.75 0 0 1 .75-.753Z"
-                                        />
-                                    </g>
-                                </svg>
-                            </div>
-
-                            <div class="pt-3 sm:pt-5">
-                                <h2
-                                    class="text-xl font-semibold text-black dark:text-white"
-                                >
-                                    Laravel News
-                                </h2>
-
-                                <p class="mt-4 text-sm/relaxed">
-                                    Laravel News is a community driven portal
-                                    and newsletter aggregating all of the latest
-                                    and most important news in the Laravel
-                                    ecosystem, including new package releases
-                                    and tutorials.
-                                </p>
-                            </div>
-
-                            <svg
-                                class="size-6 shrink-0 self-center stroke-[#FF2D20]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                />
-                            </svg>
-                        </a>
-
-                        <div
-                            class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800"
-                        >
-                            <div
-                                class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16"
-                            >
-                                <svg
-                                    class="size-5 sm:size-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <g fill="#FF2D20">
-                                        <path
-                                            d="M16.597 12.635a.247.247 0 0 0-.08-.237 2.234 2.234 0 0 1-.769-1.68c.001-.195.03-.39.084-.578a.25.25 0 0 0-.09-.267 8.8 8.8 0 0 0-4.826-1.66.25.25 0 0 0-.268.181 2.5 2.5 0 0 1-2.4 1.824.045.045 0 0 0-.045.037 12.255 12.255 0 0 0-.093 3.86.251.251 0 0 0 .208.214c2.22.366 4.367 1.08 6.362 2.118a.252.252 0 0 0 .32-.079 10.09 10.09 0 0 0 1.597-3.733ZM13.616 17.968a.25.25 0 0 0-.063-.407A19.697 19.697 0 0 0 8.91 15.98a.25.25 0 0 0-.287.325c.151.455.334.898.548 1.328.437.827.981 1.594 1.619 2.28a.249.249 0 0 0 .32.044 29.13 29.13 0 0 0 2.506-1.99ZM6.303 14.105a.25.25 0 0 0 .265-.274 13.048 13.048 0 0 1 .205-4.045.062.062 0 0 0-.022-.07 2.5 2.5 0 0 1-.777-.982.25.25 0 0 0-.271-.149 11 11 0 0 0-5.6 2.815.255.255 0 0 0-.075.163c-.008.135-.02.27-.02.406.002.8.084 1.598.246 2.381a.25.25 0 0 0 .303.193 19.924 19.924 0 0 1 5.746-.438ZM9.228 20.914a.25.25 0 0 0 .1-.393 11.53 11.53 0 0 1-1.5-2.22 12.238 12.238 0 0 1-.91-2.465.248.248 0 0 0-.22-.187 18.876 18.876 0 0 0-5.69.33.249.249 0 0 0-.179.336c.838 2.142 2.272 4 4.132 5.353a.254.254 0 0 0 .15.048c1.41-.01 2.807-.282 4.117-.802ZM18.93 12.957l-.005-.008a.25.25 0 0 0-.268-.082 2.21 2.21 0 0 1-.41.081.25.25 0 0 0-.217.2c-.582 2.66-2.127 5.35-5.75 7.843a.248.248 0 0 0-.09.299.25.25 0 0 0 .065.091 28.703 28.703 0 0 0 2.662 2.12.246.246 0 0 0 .209.037c2.579-.701 4.85-2.242 6.456-4.378a.25.25 0 0 0 .048-.189 13.51 13.51 0 0 0-2.7-6.014ZM5.702 7.058a.254.254 0 0 0 .2-.165A2.488 2.488 0 0 1 7.98 5.245a.093.093 0 0 0 .078-.062 19.734 19.734 0 0 1 3.055-4.74.25.25 0 0 0-.21-.41 12.009 12.009 0 0 0-10.4 8.558.25.25 0 0 0 .373.281 12.912 12.912 0 0 1 4.826-1.814ZM10.773 22.052a.25.25 0 0 0-.28-.046c-.758.356-1.55.635-2.365.833a.25.25 0 0 0-.022.48c1.252.43 2.568.65 3.893.65.1 0 .2 0 .3-.008a.25.25 0 0 0 .147-.444c-.526-.424-1.1-.917-1.673-1.465ZM18.744 8.436a.249.249 0 0 0 .15.228 2.246 2.246 0 0 1 1.352 2.054c0 .337-.08.67-.23.972a.25.25 0 0 0 .042.28l.007.009a15.016 15.016 0 0 1 2.52 4.6.25.25 0 0 0 .37.132.25.25 0 0 0 .096-.114c.623-1.464.944-3.039.945-4.63a12.005 12.005 0 0 0-5.78-10.258.25.25 0 0 0-.373.274c.547 2.109.85 4.274.901 6.453ZM9.61 5.38a.25.25 0 0 0 .08.31c.34.24.616.561.8.935a.25.25 0 0 0 .3.127.631.631 0 0 1 .206-.034c2.054.078 4.036.772 5.69 1.991a.251.251 0 0 0 .267.024c.046-.024.093-.047.141-.067a.25.25 0 0 0 .151-.23A29.98 29.98 0 0 0 15.957.764a.25.25 0 0 0-.16-.164 11.924 11.924 0 0 0-2.21-.518.252.252 0 0 0-.215.076A22.456 22.456 0 0 0 9.61 5.38Z"
-                                        />
-                                    </g>
-                                </svg>
-                            </div>
-
-                            <div class="pt-3 sm:pt-5">
-                                <h2
-                                    class="text-xl font-semibold text-black dark:text-white"
-                                >
-                                    Vibrant Ecosystem
-                                </h2>
-
-                                <p class="mt-4 text-sm/relaxed">
-                                    Laravel's robust library of first-party
-                                    tools and libraries, such as
-                                    <a
-                                        href="https://forge.laravel.com"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white dark:focus-visible:ring-[#FF2D20]"
-                                        >Forge</a
-                                    >,
-                                    <a
-                                        href="https://vapor.laravel.com"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Vapor</a
-                                    >,
-                                    <a
-                                        href="https://nova.laravel.com"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Nova</a
-                                    >,
-                                    <a
-                                        href="https://envoyer.io"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Envoyer</a
-                                    >, and
-                                    <a
-                                        href="https://herd.laravel.com"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Herd</a
-                                    >
-                                    help you take your projects to the next
-                                    level. Pair them with powerful open source
-                                    libraries like
-                                    <a
-                                        href="https://laravel.com/docs/billing"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Cashier</a
-                                    >,
-                                    <a
-                                        href="https://laravel.com/docs/dusk"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Dusk</a
-                                    >,
-                                    <a
-                                        href="https://laravel.com/docs/broadcasting"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Echo</a
-                                    >,
-                                    <a
-                                        href="https://laravel.com/docs/horizon"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Horizon</a
-                                    >,
-                                    <a
-                                        href="https://laravel.com/docs/sanctum"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Sanctum</a
-                                    >,
-                                    <a
-                                        href="https://laravel.com/docs/telescope"
-                                        class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
-                                        >Telescope</a
-                                    >, and more.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-
-                <footer
-                    class="py-16 text-center text-sm text-black dark:text-white/70"
-                >
-                    Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})
-                </footer>
+    <div class="min-h-screen bg-gray-50">
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900">Gerenciamento de Projetos</h1>
+            <div class="flex space-x-4">
+              <button @click="showLoginModal = true" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Login
+              </button>
+              <button @click="showRegisterModal = true" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Cadastrar
+              </button>
+              <button @click="openProjectModal(null)" class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                Novo Projeto
+              </button>
             </div>
+          </div>
         </div>
+      </header>
+
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div v-if="selectedProject" class="mb-6">
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-4">
+              <li>
+                <div>
+                  <a @click="closeTasksView" class="text-emerald-600 hover:text-emerald-700 cursor-pointer">Projetos</a>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <span class="ml-4 text-sm font-medium text-gray-500">{{ selectedProject.name }}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        <div v-if="!selectedProject">
+          <div class="mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+              <div class="flex-grow">
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    v-model="searchQuery" 
+                    placeholder="Buscar projetos..." 
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <select v-model="statusFilter" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                  <option value="all">Todos os Status</option>
+                  <option value="active">Ativos</option>
+                  <option value="inactive">Inativos</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul class="divide-y divide-gray-200">
+              <li v-for="project in paginatedProjects" :key="project.id" class="hover:bg-gray-50">
+                <div class="px-4 py-4 sm:px-6">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <p class="text-lg font-medium text-emerald-700 truncate">{{ project.name }}</p>
+                      <div :class="['ml-4 px-2 py-1 text-xs font-medium rounded-full', project.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                        {{ project.status === 'active' ? 'Ativo' : 'Inativo' }}
+                      </div>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button @click="viewTasks(project)" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md hover:bg-emerald-200 focus:outline-none" title="Ver Tarefas">
+                        <span class="flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                          </svg>
+                          Tarefas ({{ getProjectTasksCount(project.id) }})
+                        </span>
+                      </button>
+                      <button @click="viewProject(project)" class="p-1.5 text-gray-500 hover:text-gray-700 focus:outline-none" title="Visualizar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                      <button @click="openProjectModal(project)" class="p-1.5 text-blue-500 hover:text-blue-700 focus:outline-none" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                      </button>
+                      <button @click="confirmDelete(project)" class="p-1.5 text-red-500 hover:text-red-700 focus:outline-none" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="mt-2 sm:flex sm:justify-between">
+                    <div class="sm:flex">
+                      <p class="flex items-center text-sm text-gray-500">
+                        {{ project.description || 'Sem descrição' }}
+                      </p>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                      </svg>
+                      <span>{{ formatCurrency(project.budget) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li v-if="filteredProjects.length === 0" class="px-4 py-6 text-center text-gray-500">
+                Nenhum projeto encontrado.
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="filteredProjects.length > 0" class="mt-5 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+              <button @click="prevPage" :disabled="currentPage === 1"
+                :class="[
+                  'relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700',
+                  currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                ]"
+              >
+                Anterior
+              </button>
+              <button
+                @click="nextPage"
+                :disabled="currentPage >= totalPages"
+                :class="[
+                  'relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700',
+                  currentPage >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                ]"
+              >
+                Próxima
+              </button>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Mostrando <span class="font-medium">{{ paginationStart }}</span> a 
+                  <span class="font-medium">{{ paginationEnd }}</span> de 
+                  <span class="font-medium">{{ filteredProjects.length }}</span> projetos
+                </p>
+              </div>
+              <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                  <button
+                    @click="prevPage"
+                    :disabled="currentPage === 1"
+                    :class="[
+                      'relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400',
+                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                    ]"
+                  >
+                    <span class="sr-only">Anterior</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                  <template v-for="page in paginationRange" :key="page">
+                    <button
+                      v-if="page !== '...'"
+                      @click="goToPage(page)"
+                      :class="[
+                        'relative inline-flex items-center px-4 py-2 text-sm font-semibold',
+                        page === currentPage
+                          ? 'z-10 bg-emerald-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+                          : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0'
+                      ]"
+                    >
+                      {{ page }}
+                    </button>
+                    <span
+                      v-else
+                      class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300"
+                    >
+                      ...
+                    </span>
+                  </template>
+                  <button
+                    @click="nextPage"
+                    :disabled="currentPage >= totalPages"
+                    :class="[
+                      'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400',
+                      currentPage >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                    ]"
+                  >
+                    <span class="sr-only">Próxima</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="selectedProject">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">
+              Tarefas do Projeto: {{ selectedProject.name }}
+              <span class="ml-2 text-sm font-normal text-gray-500">
+                (Progresso: {{ projectProgress }}%)
+              </span>
+            </h2>
+            <div class="flex space-x-4">
+              <button 
+                @click="openTaskModal(null)" 
+                class="px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              >
+                Nova Tarefa
+              </button>
+            </div>
+          </div>
+
+          <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+            <div
+              class="bg-emerald-600 h-2.5 rounded-full"
+              :style="{ width: projectProgress + '%'}">
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+              <div class="flex-grow">
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    v-model="taskSearchQuery" 
+                    placeholder="Buscar tarefas..." 
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <select 
+                  v-model="taskStatusFilter" 
+                  class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="all">Todos os Status</option>
+                  <option value="completed">Concluídas</option>
+                  <option value="not_completed">Não Concluídas</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul class="divide-y divide-gray-200">
+              <li v-for="task in filteredTasks" :key="task.id" class="hover:bg-gray-50">
+                <div class="px-4 py-4 sm:px-6">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <input 
+                        type="checkbox" 
+                        :checked="task.status === 'completed'" 
+                        @change="toggleTaskStatus(task)"
+                        class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                      />
+                      <p 
+                        class="ml-3 text-lg font-medium truncate"
+                        :class="task.status === 'completed' ? 'text-gray-400 line-through' : 'text-emerald-700'"
+                      >
+                        {{ task.description }}
+                      </p>
+                    </div>
+                    <div class="flex space-x-2">
+                      <button 
+                        @click="viewTask(task)" 
+                        class="p-1.5 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        title="Visualizar"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                      <button 
+                        @click="openTaskModal(task)" 
+                        class="p-1.5 text-blue-500 hover:text-blue-700 focus:outline-none"
+                        title="Editar"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                      </button>
+                      <button 
+                        @click="confirmDeleteTask(task)" 
+                        class="p-1.5 text-red-500 hover:text-red-700 focus:outline-none"
+                        title="Excluir"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="mt-2 sm:flex sm:justify-between">
+                    <div class="sm:flex">
+                      <p class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                        </svg>
+                        {{ task.startDate ? formatDate(task.startDate) : 'Sem data de início' }}
+                        {{ task.endDate ? ' - ' + formatDate(task.endDate) : '' }}
+                      </p>
+                    </div>
+                    <div v-if="task.predecessorId" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                      </svg>
+                      <span>Depende de: {{ getPredecessorName(task.predecessorId) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li v-if="filteredTasks.length === 0" class="px-4 py-6 text-center text-gray-500">
+                Nenhuma tarefa encontrada.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </main>
+
+      <div v-if="showProjectModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">
+              {{ editingProject ? 'Editar Projeto' : 'Novo Projeto' }}
+            </h3>
+          </div>
+          <div class="px-6 py-4">
+            <form @submit.prevent="saveProject">
+              <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Nome do Projeto *</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  v-model="projectForm.name" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                <textarea 
+                  id="description" 
+                  v-model="projectForm.description" 
+                  rows="3"
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                ></textarea>
+              </div>
+              <div class="mb-4">
+                <label for="status" class="block text-sm font-medium text-gray-700">Status *</label>
+                <select 
+                  id="status" 
+                  v-model="projectForm.status" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="active">Ativo</option>
+                  <option value="inactive">Inativo</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="budget" class="block text-sm font-medium text-gray-700">Orçamento</label>
+                <input 
+                  type="number" 
+                  id="budget" 
+                  v-model="projectForm.budget" 
+                  min="0"
+                  step="0.01"
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="closeProjectModal" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="saveProject" 
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Confirmar Exclusão</h3>
+          </div>
+          <div class="px-6 py-4">
+            <p class="text-gray-700">
+              Tem certeza que deseja excluir o projeto <span class="font-medium">{{ projectToDelete?.name }}</span>?
+              Esta ação não pode ser desfeita.
+            </p>
+            <p v-if="hasProjectTasks" class="mt-2 text-red-600 text-sm">
+              Este projeto possui tarefas associadas e não pode ser excluído. Remova todas as tarefas primeiro.
+            </p>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="closeDeleteModal" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="deleteProject" 
+              :disabled="hasProjectTasks"
+              :class="[
+                'px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white',
+                hasProjectTasks 
+                  ? 'bg-red-300 cursor-not-allowed' 
+                  : 'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+              ]"
+            >
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showViewModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">Detalhes do Projeto</h3>
+            <button @click="closeViewModal" class="text-gray-400 hover:text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="px-6 py-4">
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Nome do Projeto</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ projectToView?.name }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Descrição</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ projectToView?.description || 'Sem descrição' }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Status</h4>
+              <div class="mt-1">
+                <span 
+                  :class="[
+                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                    projectToView?.status === 'active' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  ]"
+                >
+                  {{ projectToView?.status === 'active' ? 'Ativo' : 'Inativo' }}
+                </span>
+              </div>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Orçamento</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ formatCurrency(projectToView?.budget) }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Tarefas</h4>
+              <p class="mt-1 text-sm text-gray-900">
+                {{ getProjectTasksCount(projectToView?.id) }} tarefas associadas
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showTaskModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">
+              {{ editingTask ? 'Editar Tarefa' : 'Nova Tarefa' }}
+            </h3>
+          </div>
+          <div class="px-6 py-4">
+            <form @submit.prevent="saveTask">
+              <div class="mb-4">
+                <label for="taskDescription" class="block text-sm font-medium text-gray-700">Descrição da Tarefa *</label>
+                <input 
+                  type="text" 
+                  id="taskDescription" 
+                  v-model="taskForm.description" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="taskStartDate" class="block text-sm font-medium text-gray-700">Data de Início</label>
+                <input 
+                  type="date" 
+                  id="taskStartDate" 
+                  v-model="taskForm.startDate"
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="taskEndDate" class="block text-sm font-medium text-gray-700">Data de Fim</label>
+                <input 
+                  type="date" 
+                  id="taskEndDate" 
+                  v-model="taskForm.endDate"
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+                <p v-if="dateError" class="mt-1 text-sm text-red-600">{{ dateError }}</p>
+              </div>
+              <div class="mb-4">
+                <label for="taskPredecessor" class="block text-sm font-medium text-gray-700">Tarefa Predecessora</label>
+                <select 
+                  id="taskPredecessor" 
+                  v-model="taskForm.predecessorId"
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option :value="null">Nenhuma</option>
+                  <option 
+                    v-for="task in availablePredecessors" 
+                    :key="task.id" 
+                    :value="task.id"
+                  >
+                    {{ task.description }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="taskStatus" class="block text-sm font-medium text-gray-700">Status *</label>
+                <select 
+                  id="taskStatus" 
+                  v-model="taskForm.status" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="not_completed">Não Concluída</option>
+                  <option value="completed">Concluída</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="closeTaskModal" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="saveTask" 
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showDeleteTaskModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Confirmar Exclusão</h3>
+          </div>
+          <div class="px-6 py-4">
+            <p class="text-gray-700">
+              Tem certeza que deseja excluir a tarefa <span class="font-medium">{{ taskToDelete?.description }}</span>?
+              Esta ação não pode ser desfeita.
+            </p>
+            <p v-if="isTaskPredecessor" class="mt-2 text-red-600 text-sm">
+              Esta tarefa não pode ser excluída pois é predecessora de outra tarefa.
+            </p>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="closeDeleteTaskModal" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="deleteTask" 
+              :disabled="isTaskPredecessor"
+              :class="[
+                'px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white',
+                isTaskPredecessor 
+                  ? 'bg-red-300 cursor-not-allowed' 
+                  : 'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+              ]"
+            >
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showViewTaskModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">Detalhes da Tarefa</h3>
+            <button @click="closeViewTaskModal" class="text-gray-400 hover:text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="px-6 py-4">
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Descrição</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.description }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Projeto</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ selectedProject?.name }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Status</h4>
+              <div class="mt-1">
+                <span 
+                  :class="[
+                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                    taskToView?.status === 'completed' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-yellow-100 text-yellow-800'
+                  ]"
+                >
+                  {{ taskToView?.status === 'completed' ? 'Concluída' : 'Não Concluída' }}
+                </span>
+              </div>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Data de Início</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.startDate ? formatDate(taskToView.startDate) : 'Não definida' }}</p>
+            </div>
+            <div class="mb-4">
+              <h4 class="text-sm font-medium text-gray-500">Data de Fim</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.endDate ? formatDate(taskToView.endDate) : 'Não definida' }}</p>
+            </div>
+            <div class="mb-4" v-if="taskToView?.predecessorId">
+              <h4 class="text-sm font-medium text-gray-500">Tarefa Predecessora</h4>
+              <p class="mt-1 text-sm text-gray-900">{{ getPredecessorName(taskToView.predecessorId) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showLoginModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Login</h3>
+          </div>
+          <div class="px-6 py-4">
+            <form @submit.prevent="login">
+              <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  v-model="loginForm.email" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  v-model="loginForm.password" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="showLoginModal = false" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="login" 
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Entrar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showRegisterModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-10">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+          <div class="px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900">Cadastro</h3>
+          </div>
+          <div class="px-6 py-4">
+            <form @submit.prevent="register">
+              <div class="mb-4">
+                <label for="registerName" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input 
+                  type="text" 
+                  id="registerName" 
+                  v-model="registerForm.name" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                <input 
+                  type="email" 
+                  id="registerEmail" 
+                  v-model="registerForm.email" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input 
+                  type="password" 
+                  id="registerPassword" 
+                  v-model="registerForm.password" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="registerPasswordConfirm" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                <input 
+                  type="password" 
+                  id="registerPasswordConfirm" 
+                  v-model="registerForm.passwordConfirm" 
+                  required
+                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
+                />
+                <p v-if="passwordError" class="mt-1 text-sm text-red-600">{{ passwordError }}</p>
+              </div>
+            </form>
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
+            <button 
+              type="button" 
+              @click="showRegisterModal = false" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="button" 
+              @click="register" 
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              Cadastrar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-</template>
+  </template>
+  
+  <script>
+  export default {
+    name: 'ProjectManagement',
+    data() {
+      return {
+        projects: [
+          {
+            id: 1,
+            name: 'Sistema de Gestão Empresarial',
+            description: 'Desenvolvimento de um sistema completo para gestão de processos empresariais',
+            status: 'active',
+            budget: 150000
+          },
+          {
+            id: 2,
+            name: 'Aplicativo Mobile de Vendas',
+            description: 'Aplicativo para equipe de vendas externa com funcionalidades offline',
+            status: 'active',
+            budget: 75000
+          },
+          {
+            id: 3,
+            name: 'Portal de Treinamentos',
+            description: 'Portal para disponibilização de cursos e treinamentos internos',
+            status: 'inactive',
+            budget: 45000
+          },
+          {
+            id: 4,
+            name: 'Migração para Cloud',
+            description: 'Projeto de migração da infraestrutura local para ambiente em nuvem',
+            status: 'active',
+            budget: 120000
+          },
+          {
+            id: 5,
+            name: 'Redesign do Site Institucional',
+            description: 'Atualização completa do site institucional com foco em UX',
+            status: 'inactive',
+            budget: 30000
+          },
+          {
+            id: 6,
+            name: 'Sistema de Controle de Estoque',
+            description: 'Desenvolvimento de sistema para controle de estoque com integração a fornecedores',
+            status: 'active',
+            budget: 85000
+          },
+          {
+            id: 7,
+            name: 'Aplicativo de Delivery',
+            description: 'Aplicativo para gerenciamento de entregas e pedidos online',
+            status: 'active',
+            budget: 65000
+          },
+          {
+            id: 8,
+            name: 'Plataforma de E-learning',
+            description: 'Plataforma para cursos online com recursos interativos',
+            status: 'inactive',
+            budget: 95000
+          }
+        ],
+
+        tasks: [
+          {
+            id: 1,
+            projectId: 1,
+            description: 'Levantamento de requisitos',
+            startDate: '2023-01-10',
+            endDate: '2023-01-25',
+            predecessorId: null,
+            status: 'completed'
+          },
+          {
+            id: 2,
+            projectId: 1,
+            description: 'Modelagem de dados',
+            startDate: '2023-01-26',
+            endDate: '2023-02-15',
+            predecessorId: 1,
+            status: 'completed'
+          },
+          {
+            id: 3,
+            projectId: 1,
+            description: 'Desenvolvimento do backend',
+            startDate: '2023-02-16',
+            endDate: '2023-04-10',
+            predecessorId: 2,
+            status: 'not_completed'
+          },
+          {
+            id: 4,
+            projectId: 1,
+            description: 'Desenvolvimento do frontend',
+            startDate: '2023-03-01',
+            endDate: '2023-04-20',
+            predecessorId: null,
+            status: 'not_completed'
+          },
+          {
+            id: 5,
+            projectId: 2,
+            description: 'Prototipação de interfaces',
+            startDate: '2023-02-01',
+            endDate: '2023-02-28',
+            predecessorId: null,
+            status: 'completed'
+          },
+          {
+            id: 6,
+            projectId: 2,
+            description: 'Desenvolvimento de APIs',
+            startDate: '2023-03-01',
+            endDate: '2023-04-15',
+            predecessorId: 5,
+            status: 'not_completed'
+          }
+        ],
+
+        currentPage: 1,
+        itemsPerPage: 5,
+
+        searchQuery: '',
+        statusFilter: 'all',
+
+        taskSearchQuery: '',
+        taskStatusFilter: 'all',
+
+        showProjectModal: false,
+        showDeleteModal: false,
+        showViewModal: false,
+
+        showTaskModal: false,
+        showDeleteTaskModal: false,
+        showViewTaskModal: false,
+
+        showLoginModal: false,
+        showRegisterModal: false,
+
+        editingProject: null,
+        projectToDelete: null,
+        projectToView: null,
+        selectedProject: null,
+
+        editingTask: null,
+        taskToDelete: null,
+        taskToView: null,
+
+        projectForm: {
+          name: '',
+          description: '',
+          status: 'active',
+          budget: 0
+        },
+
+        taskForm: {
+          description: '',
+          startDate: '',
+          endDate: '',
+          predecessorId: null,
+          status: 'not_completed'
+        },
+
+        loginForm: {
+          email: '',
+          password: ''
+        },
+
+        registerForm: {
+          name: '',
+          email: '',
+          password: '',
+          passwordConfirm: ''
+        },
+
+        dateError: '',
+        passwordError: ''
+      }
+    },
+    
+    computed: {
+      filteredProjects() {
+        return this.projects.filter(project => {
+          if (this.statusFilter !== 'all' && project.status !== this.statusFilter) {
+            return false;
+          }
+
+          if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            return (
+              project.name.toLowerCase().includes(query) ||
+              (project.description && project.description.toLowerCase().includes(query))
+            );
+          }
+  
+          return true;
+        });
+      },
+
+      paginatedProjects() {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        return this.filteredProjects.slice(startIndex, endIndex);
+      },
+
+      totalPages() {
+        return Math.ceil(this.filteredProjects.length / this.itemsPerPage);
+      },
+
+      paginationRange() {
+        const range = [];
+        const maxVisiblePages = 5;
+        
+        if (this.totalPages <= maxVisiblePages) {
+          for (let i = 1; i <= this.totalPages; i++) {
+            range.push(i);
+          }
+        } else {
+          const leftSide = Math.floor(maxVisiblePages / 2);
+          const rightSide = maxVisiblePages - leftSide - 1;
+
+          range.push(1);
+          
+          if (this.currentPage > leftSide + 1) {
+            range.push('...');
+          }
+
+          const start = Math.max(2, this.currentPage - leftSide);
+          const end = Math.min(this.totalPages - 1, this.currentPage + rightSide);
+          
+          for (let i = start; i <= end; i++) {
+            range.push(i);
+          }
+          
+          if (this.currentPage < this.totalPages - rightSide) {
+            range.push('...');
+          }
+
+          if (this.totalPages > 1) {
+            range.push(this.totalPages);
+          }
+        }
+        
+        return range;
+      },
+
+      paginationStart() {
+        return this.filteredProjects.length === 0 ? 0 : (this.currentPage - 1) * this.itemsPerPage + 1;
+      },
+
+      paginationEnd() {
+        return Math.min(this.currentPage * this.itemsPerPage, this.filteredProjects.length);
+      },
+
+      projectTasks() {
+        if (!this.selectedProject) return [];
+        return this.tasks.filter(task => task.projectId === this.selectedProject.id);
+      },
+
+      filteredTasks() {
+        return this.projectTasks.filter(task => {
+          if (this.taskStatusFilter !== 'all' && task.status !== this.taskStatusFilter) {
+            return false;
+          }
+
+          if (this.taskSearchQuery) {
+            const query = this.taskSearchQuery.toLowerCase();
+            return task.description.toLowerCase().includes(query);
+          }
+          
+          return true;
+        });
+      },
+
+      availablePredecessors() {
+        if (!this.selectedProject) return [];
+
+        return this.projectTasks.filter(task => {
+          if (this.editingTask && task.id === this.editingTask.id) {
+            return false;
+          }
+
+          if (this.editingTask) {
+            let currentTask = task;
+            while (currentTask.predecessorId) {
+              if (currentTask.predecessorId === this.editingTask.id) {
+                return false;
+              }
+              currentTask = this.tasks.find(t => t.id === currentTask.predecessorId);
+              if (!currentTask) break;
+            }
+          }
+          
+          return true;
+        });
+      },
+
+      isTaskPredecessor() {
+        if (!this.taskToDelete) return false;
+        return this.tasks.some(task => task.predecessorId === this.taskToDelete.id);
+      },
+
+      hasProjectTasks() {
+        if (!this.projectToDelete) return false;
+        return this.tasks.some(task => task.projectId === this.projectToDelete.id);
+      },
+
+      projectProgress() {
+        if (!this.projectTasks.length) return 0;
+        
+        const completedTasks = this.projectTasks.filter(task => task.status === 'completed').length;
+        return Math.round((completedTasks / this.projectTasks.length) * 100);
+      }
+    },
+    
+    methods: {
+      prevPage() {
+        if (this.currentPage > 1) {
+          this.currentPage--;
+        }
+      },
+      
+      nextPage() {
+        if (this.currentPage < this.totalPages) {
+          this.currentPage++;
+        }
+      },
+      
+      goToPage(page) {
+        this.currentPage = page;
+      },
+      
+
+      formatCurrency(value) {
+        if (!value && value !== 0) return 'Não definido';
+        return new Intl.NumberFormat('pt-BR', { 
+          style: 'currency', 
+          currency: 'BRL' 
+        }).format(value);
+      },
+      
+
+      formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('pt-BR').format(date);
+      },
+      
+
+      getPredecessorName(predecessorId) {
+        if (!predecessorId) return '';
+        const predecessor = this.tasks.find(task => task.id === predecessorId);
+        return predecessor ? predecessor.description : '';
+      },
+      
+
+      getProjectTasksCount(projectId) {
+        return this.tasks.filter(task => task.projectId === projectId).length;
+      },
+      
+
+      openProjectModal(project) {
+        this.editingProject = project;
+        
+        if (project) {
+          this.projectForm = { ...project };
+        } else {
+          this.projectForm = {
+            name: '',
+            description: '',
+            status: 'active',
+            budget: 0
+          };
+        }
+        
+        this.showProjectModal = true;
+      },
+      
+      closeProjectModal() {
+        this.showProjectModal = false;
+        this.editingProject = null;
+      },
+
+      saveProject() {
+        if (!this.projectForm.name) {
+          alert('O nome do projeto é obrigatório');
+          return;
+        }
+
+        const duplicateName = this.projects.find(p => 
+          p.name.toLowerCase() === this.projectForm.name.toLowerCase() && 
+          p.id !== (this.editingProject?.id)
+        );
+        
+        if (duplicateName) {
+          alert('Já existe um projeto com este nome');
+          return;
+        }
+        
+        if (this.editingProject) {
+          const index = this.projects.findIndex(p => p.id === this.editingProject.id);
+          if (index !== -1) {
+            this.projects[index] = { ...this.projectForm, id: this.editingProject.id };
+          }
+        } else {
+          const newId = Math.max(0, ...this.projects.map(p => p.id)) + 1;
+          this.projects.push({ ...this.projectForm, id: newId });
+        }
+        
+        this.closeProjectModal();
+      },
+
+      confirmDelete(project) {
+        this.projectToDelete = project;
+        this.showDeleteModal = true;
+      },
+
+      closeDeleteModal() {
+        this.showDeleteModal = false;
+        this.projectToDelete = null;
+      },
+
+      deleteProject() {
+        if (this.projectToDelete && !this.hasProjectTasks) {
+          const index = this.projects.findIndex(p => p.id === this.projectToDelete.id);
+          if (index !== -1) {
+            this.projects.splice(index, 1);
+          }
+          this.closeDeleteModal();
+        }
+      },
+      
+
+      viewProject(project) {
+        this.projectToView = project;
+        this.showViewModal = true;
+      },
+      
+
+      closeViewModal() {
+        this.showViewModal = false;
+        this.projectToView = null;
+      },
+      
+
+      viewTasks(project) {
+        this.selectedProject = project;
+      },
+      
+
+      closeTasksView() {
+        this.selectedProject = null;
+      },
+      
+
+      
+
+      openTaskModal(task) {
+        this.editingTask = task;
+        this.dateError = '';
+        
+        if (task) {
+
+          this.taskForm = { ...task };
+        } else {
+
+          this.taskForm = {
+            description: '',
+            startDate: '',
+            endDate: '',
+            predecessorId: null,
+            status: 'not_completed'
+          };
+        }
+        
+        this.showTaskModal = true;
+      },
+      
+
+      closeTaskModal() {
+        this.showTaskModal = false;
+        this.editingTask = null;
+        this.dateError = '';
+      },
+      
+
+      saveTask() {
+        if (!this.taskForm.description) {
+          alert('A descrição da tarefa é obrigatória');
+          return;
+        }
+        
+
+        if (this.taskForm.startDate && this.taskForm.endDate) {
+          if (new Date(this.taskForm.endDate) < new Date(this.taskForm.startDate)) {
+            this.dateError = 'A data de fim não pode ser anterior à data de início';
+            return;
+          }
+        }
+        
+
+        const duplicateDescription = this.projectTasks.find(t => 
+          t.description.toLowerCase() === this.taskForm.description.toLowerCase() && 
+          t.id !== (this.editingTask?.id)
+        );
+        
+        if (duplicateDescription) {
+          alert('Já existe uma tarefa com esta descrição neste projeto');
+          return;
+        }
+        
+        if (this.editingTask) {
+
+          const index = this.tasks.findIndex(t => t.id === this.editingTask.id);
+          if (index !== -1) {
+            this.tasks[index] = { 
+              ...this.taskForm, 
+              id: this.editingTask.id,
+              projectId: this.selectedProject.id
+            };
+          }
+        } else {
+
+          const newId = Math.max(0, ...this.tasks.map(t => t.id)) + 1;
+          this.tasks.push({ 
+            ...this.taskForm, 
+            id: newId,
+            projectId: this.selectedProject.id
+          });
+        }
+        
+        this.closeTaskModal();
+      },
+      
+
+      confirmDeleteTask(task) {
+        this.taskToDelete = task;
+        this.showDeleteTaskModal = true;
+      },
+      
+
+      closeDeleteTaskModal() {
+        this.showDeleteTaskModal = false;
+        this.taskToDelete = null;
+      },
+      
+
+      deleteTask() {
+        if (this.taskToDelete && !this.isTaskPredecessor) {
+          const index = this.tasks.findIndex(t => t.id === this.taskToDelete.id);
+          if (index !== -1) {
+            this.tasks.splice(index, 1);
+          }
+        }
+        this.closeDeleteTaskModal();
+      },
+      
+
+      viewTask(task) {
+        this.taskToView = task;
+        this.showViewTaskModal = true;
+      },
+      
+
+      closeViewTaskModal() {
+        this.showViewTaskModal = false;
+        this.taskToView = null;
+      },
+      
+
+      toggleTaskStatus(task) {
+        const index = this.tasks.findIndex(t => t.id === task.id);
+        if (index !== -1) {
+          this.tasks[index].status = task.status === 'completed' ? 'not_completed' : 'completed';
+        }
+      },
+      
+
+      
+
+      login() {
+        if (!this.loginForm.email || !this.loginForm.password) {
+          alert('Preencha todos os campos');
+          return;
+        }
+        
+
+        alert('Login realizado com sucesso!');
+        this.showLoginModal = false;
+      },
+      
+
+      register() {
+        if (!this.registerForm.name || !this.registerForm.email || !this.registerForm.password || !this.registerForm.passwordConfirm) {
+          alert('Preencha todos os campos');
+          return;
+        }
+        
+        if (this.registerForm.password !== this.registerForm.passwordConfirm) {
+          this.passwordError = 'As senhas não coincidem';
+          return;
+        }
+        
+
+        alert('Cadastro realizado com sucesso!');
+        this.showRegisterModal = false;
+      }
+    }
+  }
+</script>
