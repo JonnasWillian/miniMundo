@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: jonnywf/minimundo:latest
     container_name: mini-mundo-app
     working_dir: /var/www/html
     volumes:
