@@ -262,8 +262,8 @@
                   class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   <option value="all">Todos os Status</option>
-                  <option value="completed">Concluídas</option>
-                  <option value="not_completed">Não Concluídas</option>
+                  <option value="completa">Concluídas</option>
+                  <option value="incompleta">Não Concluídas</option>
                 </select>
               </div>
             </div>
@@ -277,15 +277,15 @@
                     <div class="flex items-center">
                       <input 
                         type="checkbox" 
-                        :checked="task.status === 'completed'" 
+                        :checked="task.status === 'completa'" 
                         @change="toggleTaskStatus(task)"
                         class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
                       />
                       <p 
                         class="ml-3 text-lg font-medium truncate"
-                        :class="task.status === 'completed' ? 'text-gray-400 line-through' : 'text-emerald-700'"
+                        :class="task.status === 'completa' ? 'text-gray-400 line-through' : 'text-emerald-700'"
                       >
-                        {{ task.description }}
+                        {{ task.descricao }}
                       </p>
                     </div>
                     <div class="flex space-x-2">
@@ -300,6 +300,7 @@
                         </svg>
                       </button>
                       <button 
+                        v-if="user"
                         @click="openTaskModal(task)" 
                         class="p-1.5 text-blue-500 hover:text-blue-700 focus:outline-none"
                         title="Editar"
@@ -308,7 +309,8 @@
                           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                         </svg>
                       </button>
-                      <button 
+                      <button
+                        v-if="user" 
                         @click="confirmDeleteTask(task)" 
                         class="p-1.5 text-red-500 hover:text-red-700 focus:outline-none"
                         title="Excluir"
@@ -325,15 +327,15 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                           <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
                         </svg>
-                        {{ task.startDate ? formatDate(task.startDate) : 'Sem data de início' }}
-                        {{ task.endDate ? ' - ' + formatDate(task.endDate) : '' }}
+                        {{ task.data_inicial ? formatDate(task.data_inicial) : 'Sem data de início' }}
+                        {{ task.data_final ? ' - ' + formatDate(task.data_final) : '' }}
                       </p>
                     </div>
-                    <div v-if="task.predecessorId" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                    <div v-if="task.tarefa_processadora" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                       <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                       </svg>
-                      <span>Depende de: {{ getPredecessorName(task.predecessorId) }}</span>
+                      <span>Depende de: {{ getPredecessorName(task.tarefa_processadora) }}</span>
                     </div>
                   </div>
                 </div>
@@ -519,7 +521,7 @@
                 <input 
                   type="text" 
                   id="taskDescription" 
-                  v-model="taskForm.description" 
+                  v-model="taskForm.descricao" 
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
@@ -529,7 +531,7 @@
                 <input 
                   type="date" 
                   id="taskStartDate" 
-                  v-model="taskForm.startDate"
+                  v-model="taskForm.data_inicial"
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
               </div>
@@ -538,7 +540,7 @@
                 <input 
                   type="date" 
                   id="taskEndDate" 
-                  v-model="taskForm.endDate"
+                  v-model="taskForm.data_final"
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
                 <p v-if="dateError" class="mt-1 text-sm text-red-600">{{ dateError }}</p>
@@ -547,7 +549,7 @@
                 <label for="taskPredecessor" class="block text-sm font-medium text-gray-700">Tarefa Predecessora</label>
                 <select 
                   id="taskPredecessor" 
-                  v-model="taskForm.predecessorId"
+                  v-model="taskForm.tarefa_processadora"
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   <option :value="null">Nenhuma</option>
@@ -556,7 +558,7 @@
                     :key="task.id" 
                     :value="task.id"
                   >
-                    {{ task.description }}
+                    {{ task.descricao }}
                   </option>
                 </select>
               </div>
@@ -568,8 +570,8 @@
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
-                  <option value="not_completed">Não Concluída</option>
-                  <option value="completed">Concluída</option>
+                  <option value="incompleta">Não Concluída</option>
+                  <option value="completa">Concluída</option>
                 </select>
               </div>
             </form>
@@ -600,7 +602,7 @@
           </div>
           <div class="px-6 py-4">
             <p class="text-gray-700">
-              Tem certeza que deseja excluir a tarefa <span class="font-medium">{{ taskToDelete?.description }}</span>?
+              Tem certeza que deseja excluir a tarefa <span class="font-medium">{{ taskToDelete?.descricao }}</span>?
               Esta ação não pode ser desfeita.
             </p>
             <p v-if="isTaskPredecessor" class="mt-2 text-red-600 text-sm">
@@ -645,7 +647,7 @@
           <div class="px-6 py-4">
             <div class="mb-4">
               <h4 class="text-sm font-medium text-gray-500">Descrição</h4>
-              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.description }}</p>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.descricao }}</p>
             </div>
             <div class="mb-4">
               <h4 class="text-sm font-medium text-gray-500">Projeto</h4>
@@ -657,26 +659,26 @@
                 <span 
                   :class="[
                     'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    taskToView?.status === 'completed' 
+                    taskToView?.status === 'completa' 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-yellow-100 text-yellow-800'
                   ]"
                 >
-                  {{ taskToView?.status === 'completed' ? 'Concluída' : 'Não Concluída' }}
+                  {{ taskToView?.status === 'completa' ? 'Concluída' : 'Não Concluída' }}
                 </span>
               </div>
             </div>
             <div class="mb-4">
               <h4 class="text-sm font-medium text-gray-500">Data de Início</h4>
-              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.startDate ? formatDate(taskToView.startDate) : 'Não definida' }}</p>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.data_inicial ? formatDate(taskToView.data_inicial) : 'Não definida' }}</p>
             </div>
             <div class="mb-4">
               <h4 class="text-sm font-medium text-gray-500">Data de Fim</h4>
-              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.endDate ? formatDate(taskToView.endDate) : 'Não definida' }}</p>
+              <p class="mt-1 text-sm text-gray-900">{{ taskToView?.data_final ? formatDate(taskToView.data_final) : 'Não definida' }}</p>
             </div>
-            <div class="mb-4" v-if="taskToView?.predecessorId">
+            <div class="mb-4" v-if="taskToView?.tarefa_processadora">
               <h4 class="text-sm font-medium text-gray-500">Tarefa Predecessora</h4>
-              <p class="mt-1 text-sm text-gray-900">{{ getPredecessorName(taskToView.predecessorId) }}</p>
+              <p class="mt-1 text-sm text-gray-900">{{ getPredecessorName(taskToView.tarefa_processadora) }}</p>
             </div>
           </div>
         </div>
@@ -858,57 +860,57 @@
         tasks: [
           {
             id: 1,
-            projectId: 1,
-            description: 'Levantamento de requisitos',
-            startDate: '2023-01-10',
-            endDate: '2023-01-25',
-            predecessorId: null,
-            status: 'completed'
+            projeto_id: 1,
+            descricao: 'Levantamento de requisitos',
+            data_inicial: '2023-01-10',
+            data_final: '2023-01-25',
+            tarefa_processadora: null,
+            status: 'completa'
           },
           {
             id: 2,
-            projectId: 1,
-            description: 'Modelagem de dados',
-            startDate: '2023-01-26',
-            endDate: '2023-02-15',
-            predecessorId: 1,
-            status: 'completed'
+            projeto_id: 1,
+            descricao: 'Modelagem de dados',
+            data_inicial: '2023-01-26',
+            data_final: '2023-02-15',
+            tarefa_processadora: 1,
+            status: 'completa'
           },
           {
             id: 3,
-            projectId: 1,
-            description: 'Desenvolvimento do backend',
-            startDate: '2023-02-16',
-            endDate: '2023-04-10',
-            predecessorId: 2,
-            status: 'not_completed'
+            projeto_id: 1,
+            descricao: 'Desenvolvimento do backend',
+            data_inicial: '2023-02-16',
+            data_final: '2023-04-10',
+            tarefa_processadora: 2,
+            status: 'incompleta'
           },
           {
             id: 4,
-            projectId: 1,
-            description: 'Desenvolvimento do frontend',
-            startDate: '2023-03-01',
-            endDate: '2023-04-20',
-            predecessorId: null,
-            status: 'not_completed'
+            projeto_id: 1,
+            descricao: 'Desenvolvimento do frontend',
+            data_inicial: '2023-03-01',
+            data_final: '2023-04-20',
+            tarefa_processadora: null,
+            status: 'incompleta'
           },
           {
             id: 5,
-            projectId: 2,
-            description: 'Prototipação de interfaces',
-            startDate: '2023-02-01',
-            endDate: '2023-02-28',
-            predecessorId: null,
-            status: 'completed'
+            projeto_id: 2,
+            descricao: 'Prototipação de interfaces',
+            data_inicial: '2023-02-01',
+            data_final: '2023-02-28',
+            tarefa_processadora: null,
+            status: 'completa'
           },
           {
             id: 6,
-            projectId: 2,
-            description: 'Desenvolvimento de APIs',
-            startDate: '2023-03-01',
-            endDate: '2023-04-15',
-            predecessorId: 5,
-            status: 'not_completed'
+            projeto_id: 2,
+            descricao: 'Desenvolvimento de APIs',
+            data_inicial: '2023-03-01',
+            data_final: '2023-04-15',
+            tarefa_processadora: 5,
+            status: 'incompleta'
           }
         ],
 
@@ -949,11 +951,11 @@
         },
 
         taskForm: {
-          description: '',
-          startDate: '',
-          endDate: '',
-          predecessorId: null,
-          status: 'not_completed'
+          descricao: '',
+          data_inicial: '',
+          data_final: '',
+          tarefa_processadora: null,
+          status: 'incompleta'
         },
 
         loginForm: {
@@ -1067,7 +1069,7 @@
 
       projectTasks() {
         if (!this.selectedProject) return [];
-        return this.tasks.filter(task => task.projectId === this.selectedProject.id);
+        return this.tasks.filter(task => task.projeto_id === this.selectedProject.id);
       },
 
       filteredTasks() {
@@ -1078,7 +1080,7 @@
 
           if (this.taskSearchQuery) {
             const query = this.taskSearchQuery.toLowerCase();
-            return task.description.toLowerCase().includes(query);
+            return task.descricao.toLowerCase().includes(query);
           }
           
           return true;
@@ -1095,11 +1097,11 @@
 
           if (this.editingTask) {
             let currentTask = task;
-            while (currentTask.predecessorId) {
-              if (currentTask.predecessorId === this.editingTask.id) {
+            while (currentTask.tarefa_processadora) {
+              if (currentTask.tarefa_processadora === this.editingTask.id) {
                 return false;
               }
-              currentTask = this.tasks.find(t => t.id === currentTask.predecessorId);
+              currentTask = this.tasks.find(t => t.id === currentTask.tarefa_processadora);
               if (!currentTask) break;
             }
           }
@@ -1110,18 +1112,18 @@
 
       isTaskPredecessor() {
         if (!this.taskToDelete) return false;
-        return this.tasks.some(task => task.predecessorId === this.taskToDelete.id);
+        return this.tasks.some(task => task.tarefa_processadora === this.taskToDelete.id);
       },
 
       hasProjectTasks() {
         if (!this.projectToDelete) return false;
-        return this.tasks.some(task => task.projectId === this.projectToDelete.id);
+        return this.tasks.some(task => task.projeto_id === this.projectToDelete.id);
       },
 
       projectProgress() {
         if (!this.projectTasks.length) return 0;
         
-        const completedTasks = this.projectTasks.filter(task => task.status === 'completed').length;
+        const completedTasks = this.projectTasks.filter(task => task.status === 'completa').length;
         return Math.round((completedTasks / this.projectTasks.length) * 100);
       }
     },
@@ -1261,14 +1263,14 @@
         return new Intl.DateTimeFormat('pt-BR').format(date);
       },
       
-      getPredecessorName(predecessorId) {
-        if (!predecessorId) return '';
-        const predecessor = this.tasks.find(task => task.id === predecessorId);
+      getPredecessorName(tarefa_processadora) {
+        if (!tarefa_processadora) return '';
+        const predecessor = this.tasks.find(task => task.id === tarefa_processadora);
         return predecessor ? predecessor.description : '';
       },
       
-      getProjectTasksCount(projectId) {
-        return this.tasks.filter(task => task.projectId === projectId).length;
+      getProjectTasksCount(projeto_id) {
+        return this.tasks.filter(task => task.projeto_id === projeto_id).length;
       },
       
       openProjectModal(project) {
@@ -1334,11 +1336,11 @@
           this.taskForm = { ...task };
         } else {
           this.taskForm = {
-            description: '',
-            startDate: '',
-            endDate: '',
-            predecessorId: null,
-            status: 'not_completed'
+            descricao: '',
+            data_inicial: '',
+            data_final: '',
+            tarefa_processadora: null,
+            status: 'incompleta'
           };
         }
         
@@ -1357,8 +1359,8 @@
           return;
         }
         
-        if (this.taskForm.startDate && this.taskForm.endDate) {
-          if (new Date(this.taskForm.endDate) < new Date(this.taskForm.startDate)) {
+        if (this.taskForm.data_inicial && this.taskForm.data_final) {
+          if (new Date(this.taskForm.data_final) < new Date(this.taskForm.data_inicial)) {
             this.dateError = 'A data de fim não pode ser anterior à data de início';
             return;
           }
@@ -1380,7 +1382,7 @@
             this.tasks[index] = { 
               ...this.taskForm, 
               id: this.editingTask.id,
-              projectId: this.selectedProject.id
+              projeto_id: this.selectedProject.id
             };
           }
         } else {
@@ -1388,7 +1390,7 @@
           this.tasks.push({ 
             ...this.taskForm, 
             id: newId,
-            projectId: this.selectedProject.id
+            projeto_id: this.selectedProject.id
           });
         }
         
@@ -1428,7 +1430,7 @@
       toggleTaskStatus(task) {
         const index = this.tasks.findIndex(t => t.id === task.id);
         if (index !== -1) {
-          this.tasks[index].status = task.status === 'completed' ? 'not_completed' : 'completed';
+          this.tasks[index].status = task.status === 'completa' ? 'incompleta' : 'completa';
         }
       },
 
