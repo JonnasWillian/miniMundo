@@ -26,16 +26,12 @@ RUN chmod +x /wait-for-it.sh
 
 WORKDIR /var/www/html
 
-COPY package*.json ./
-COPY vite.config.js ./
-COPY index.html ./
-COPY src/ ./src/
-COPY public/ ./public/
+COPY . .
 
 RUN npm install
 RUN npm install axios
 
-COPY . .
+RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 RUN mkdir -p storage bootstrap/cache \
   && chown -R www-data:www-data storage bootstrap/cache \
