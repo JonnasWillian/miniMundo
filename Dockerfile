@@ -22,6 +22,9 @@ COPY .docker/wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 WORKDIR /var/www/html
+RUN npm install
+RUN npm install axios
+RUN npm run build
 
 COPY . .
 

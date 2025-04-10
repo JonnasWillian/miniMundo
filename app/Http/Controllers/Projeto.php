@@ -12,7 +12,8 @@ use App\Models\Projeto as ProjetoDb;
 
 class Projeto extends Controller
 {
-    public function view(){
+    public function view()
+    {
         $projetos = ProjetoDb::orderBy('created_at', 'desc')->get();
 
         return response()->json($projetos);

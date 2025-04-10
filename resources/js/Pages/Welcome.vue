@@ -3,16 +3,19 @@
       <header class="bg-white shadow">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-900">Gerenciamento de Projetos</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Bem Vindo ao MiniMundo<span v-if="user"> Admin, {{ user.name }}</span></h1>
             <div class="flex space-x-4">
-              <button @click="showLoginModal = true" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+              <button v-if="!user" @click="showLoginModal = true" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                 Login
               </button>
-              <button @click="showRegisterModal = true" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+              <button v-if="!user" @click="showRegisterModal = true" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                 Cadastrar
               </button>
-              <button @click="openProjectModal(null)" class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+              <button v-if="user" @click="openProjectModal(null)" class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                 Novo Projeto
+              </button>
+              <button v-if="user" @click="logout()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                Sair
               </button>
             </div>
           </div>
@@ -61,8 +64,8 @@
               <div class="flex-shrink-0">
                 <select v-model="statusFilter" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
                   <option value="all">Todos os Status</option>
-                  <option value="active">Ativos</option>
-                  <option value="inactive">Inativos</option>
+                  <option value="ativo">Ativos</option>
+                  <option value="desativado">Inativos</option>
                 </select>
               </div>
             </div>
@@ -75,8 +78,8 @@
                   <div class="flex items-center justify-between">
                     <div class="flex items-center">
                       <p class="text-lg font-medium text-emerald-700 truncate">{{ project.name }}</p>
-                      <div :class="['ml-4 px-2 py-1 text-xs font-medium rounded-full', project.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
-                        {{ project.status === 'active' ? 'Ativo' : 'Inativo' }}
+                      <div :class="['ml-4 px-2 py-1 text-xs font-medium rounded-full', project.status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                        {{ project.status === 'ativo' ? 'Ativo' : 'Inativo' }}
                       </div>
                     </div>
                     <div class="flex space-x-2">
@@ -95,12 +98,12 @@
                           <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                         </svg>
                       </button>
-                      <button @click="openProjectModal(project)" class="p-1.5 text-blue-500 hover:text-blue-700 focus:outline-none" title="Editar">
+                      <button v-if="user" @click="openProjectModal(project)" class="p-1.5 text-blue-500 hover:text-blue-700 focus:outline-none" title="Editar">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                         </svg>
                       </button>
-                      <button @click="confirmDelete(project)" class="p-1.5 text-red-500 hover:text-red-700 focus:outline-none" title="Excluir">
+                      <button v-if="user" @click="confirmDelete(project)" class="p-1.5 text-red-500 hover:text-red-700 focus:outline-none" title="Excluir">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
@@ -357,7 +360,7 @@
                 <input 
                   type="text" 
                   id="name" 
-                  v-model="projectForm.name" 
+                  v-model="projectForm.nome" 
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
@@ -366,7 +369,7 @@
                 <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
                 <textarea 
                   id="description" 
-                  v-model="projectForm.description" 
+                  v-model="projectForm.descricao" 
                   rows="3"
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 ></textarea>
@@ -379,8 +382,8 @@
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
-                  <option value="active">Ativo</option>
-                  <option value="inactive">Inativo</option>
+                  <option value="ativo">Ativo</option>
+                  <option value="desativado">Inativo</option>
                 </select>
               </div>
               <div class="mb-4">
@@ -388,7 +391,7 @@
                 <input 
                   type="number" 
                   id="budget" 
-                  v-model="projectForm.budget" 
+                  v-model="projectForm.orcamento" 
                   min="0"
                   step="0.01"
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
@@ -479,12 +482,12 @@
                 <span 
                   :class="[
                     'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    projectToView?.status === 'active' 
+                    projectToView?.status === 'ativo' 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-red-100 text-red-800'
                   ]"
                 >
-                  {{ projectToView?.status === 'active' ? 'Ativo' : 'Inativo' }}
+                  {{ projectToView?.status === 'ativo' ? 'Ativo' : 'Inativo' }}
                 </span>
               </div>
             </div>
@@ -686,6 +689,11 @@
           </div>
           <div class="px-6 py-4">
             <form @submit.prevent="login">
+              <!-- Mensagem de erro de login -->
+              <div v-if="loginError" class="mb-4 p-3 bg-red-50 text-sm text-red-600 rounded border border-red-200">
+                {{ loginError }}
+              </div>
+              
               <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                 <input 
@@ -743,6 +751,7 @@
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
+                <p v-if="registerErrors.name" class="mt-1 text-sm text-red-600">{{ registerErrors.name }}</p>
               </div>
               <div class="mb-4">
                 <label for="registerEmail" class="block text-sm font-medium text-gray-700">Email</label>
@@ -753,6 +762,7 @@
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
+                <p v-if="registerErrors.email" class="mt-1 text-sm text-red-600">{{ registerErrors.email }}</p>
               </div>
               <div class="mb-4">
                 <label for="registerPassword" class="block text-sm font-medium text-gray-700">Senha</label>
@@ -763,13 +773,15 @@
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
+                <p class="mt-1 text-sm text-gray-500">A senha deve ter pelo menos 8 caracteres</p>
+                <p v-if="registerErrors.password" class="mt-1 text-sm text-red-600">{{ registerErrors.password }}</p>
               </div>
               <div class="mb-4">
                 <label for="registerPasswordConfirm" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
                 <input 
                   type="password" 
                   id="registerPasswordConfirm" 
-                  v-model="registerForm.passwordConfirm" 
+                  v-model="registerForm.password_confirmation" 
                   required
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
@@ -795,73 +807,54 @@
           </div>
         </div>
       </div>
+
+      <div v-if="showAlert" 
+          :class="[
+            'fixed top-4 right-4 p-4 rounded-md shadow-md z-50 transition-all duration-300',
+            alertType === 'error' ? 'bg-red-100 border-l-4 border-red-500 text-red-700' : 
+            alertType === 'success' ? 'bg-green-100 border-l-4 border-green-500 text-green-700' :
+            'bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700'
+          ]">
+        <div class="flex items-center">
+          <div v-if="alertType === 'error'" class="mr-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div v-else-if="alertType === 'success'" class="mr-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div v-else class="mr-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <span>{{ alertMessage }}</span>
+          <button @click="showAlert = false" class="ml-auto text-gray-500 hover:text-gray-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
+  import axios from 'axios'
+  import { usePage, router } from '@inertiajs/vue3'
+   
+  axios.defaults.withCredentials = true;
+  axios.defaults.baseURL = 'http://localhost:8080';
   export default {
     name: 'ProjectManagement',
+    
     data() {
       return {
-        projects: [
-          {
-            id: 1,
-            name: 'Sistema de Gestão Empresarial',
-            description: 'Desenvolvimento de um sistema completo para gestão de processos empresariais',
-            status: 'active',
-            budget: 150000
-          },
-          {
-            id: 2,
-            name: 'Aplicativo Mobile de Vendas',
-            description: 'Aplicativo para equipe de vendas externa com funcionalidades offline',
-            status: 'active',
-            budget: 75000
-          },
-          {
-            id: 3,
-            name: 'Portal de Treinamentos',
-            description: 'Portal para disponibilização de cursos e treinamentos internos',
-            status: 'inactive',
-            budget: 45000
-          },
-          {
-            id: 4,
-            name: 'Migração para Cloud',
-            description: 'Projeto de migração da infraestrutura local para ambiente em nuvem',
-            status: 'active',
-            budget: 120000
-          },
-          {
-            id: 5,
-            name: 'Redesign do Site Institucional',
-            description: 'Atualização completa do site institucional com foco em UX',
-            status: 'inactive',
-            budget: 30000
-          },
-          {
-            id: 6,
-            name: 'Sistema de Controle de Estoque',
-            description: 'Desenvolvimento de sistema para controle de estoque com integração a fornecedores',
-            status: 'active',
-            budget: 85000
-          },
-          {
-            id: 7,
-            name: 'Aplicativo de Delivery',
-            description: 'Aplicativo para gerenciamento de entregas e pedidos online',
-            status: 'active',
-            budget: 65000
-          },
-          {
-            id: 8,
-            name: 'Plataforma de E-learning',
-            description: 'Plataforma para cursos online com recursos interativos',
-            status: 'inactive',
-            budget: 95000
-          }
-        ],
-
+        projects: [],
+        user: usePage().props.auth.user,
         tasks: [
           {
             id: 1,
@@ -949,10 +942,10 @@
         taskToView: null,
 
         projectForm: {
-          name: '',
-          description: '',
-          status: 'active',
-          budget: 0
+          nome: '',
+          descricao: '',
+          status: 'ativo',
+          orcamento: 0
         },
 
         taskForm: {
@@ -972,12 +965,30 @@
           name: '',
           email: '',
           password: '',
-          passwordConfirm: ''
+          password_confirmation: ''
+        },
+
+        loginError: '',
+        registerErrors: {
+          name: '',
+          email: '',
+          password: ''
         },
 
         dateError: '',
-        passwordError: ''
+        passwordError: '',
+        passwordError: '',
+        showAlert: false,
+        alertMessage: '',
+        alertType: 'error',
+        
+        loading: false,
+        error: null
       }
+    },
+    
+    created() {
+      this.fetchProjects();;
     },
     
     computed: {
@@ -994,7 +1005,7 @@
               (project.description && project.description.toLowerCase().includes(query))
             );
           }
-  
+
           return true;
         });
       },
@@ -1116,6 +1127,110 @@
     },
     
     methods: {
+      async fetchProjects() {
+        this.loading = true;
+        this.error = null;
+        
+        try {
+          const response = await fetch('http://localhost:8080/api/projeto');
+          
+          if (!response.ok) {
+            throw new Error(`Erro ao buscar projetos: ${response.status}`);
+          }
+          
+          const data = await response.json();
+
+          this.projects = data.map(item => ({
+            id: item.id,
+            name: item.nome || item.name,
+            description: item.descricao || item.description,
+            status: item.status,
+            budget: item.orcamento || item.budget
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar projetos:', error);
+          this.error = error.message || 'Erro ao carregar projetos';
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      async saveProject() {
+        if (!this.projectForm.nome) {
+          alert('O nome do projeto é obrigatório');
+          return;
+        }
+
+        const duplicateName = this.projects.find(p => 
+          p.name.toLowerCase() === this.projectForm.nome.toLowerCase() && 
+          p.id !== (this.editingProject?.id)
+        );
+        
+        if (duplicateName) {
+          alert('Já existe um projeto com este nome');
+          return;
+        }
+        
+        try {
+          const projectData = {
+            nome: this.projectForm.nome,
+            descricao: this.projectForm.descricao,
+            status: this.projectForm.status,
+            orcamento: this.projectForm.orcamento
+          };
+          
+          let response;
+          
+          if (this.editingProject) {
+            response = await fetch(`http://localhost:8080/api/projeto/${this.editingProject.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(projectData)
+            });
+          } else {
+            response = await fetch('http://localhost:8080/api/projeto', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(projectData)
+            });
+          }
+          
+          if (!response.ok) {
+            throw new Error(`Erro ao salvar projeto: ${response.status}`);
+          }
+
+          this.fetchProjects();
+          this.closeProjectModal();
+        } catch (error) {
+          console.error('Erro ao salvar projeto:', error);
+          alert(`Erro ao salvar projeto: ${error.message}`);
+        }
+      },
+
+      async deleteProject() {
+        if (this.projectToDelete && !this.hasProjectTasks) {
+          try {
+            const response = await fetch(`http://localhost:8080/api/projeto/${this.projectToDelete.id}`, {
+              method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+              throw new Error(`Erro ao excluir projeto: ${response.status}`);
+            }
+
+            this.fetchProjects();
+            this.closeDeleteModal();
+          } catch (error) {
+            console.error('Erro ao excluir projeto:', error);
+            alert(`Erro ao excluir projeto: ${error.message}`);
+          }
+        }
+      },
+      
       prevPage() {
         if (this.currentPage > 1) {
           this.currentPage--;
@@ -1132,7 +1247,6 @@
         this.currentPage = page;
       },
       
-
       formatCurrency(value) {
         if (!value && value !== 0) return 'Não definido';
         return new Intl.NumberFormat('pt-BR', { 
@@ -1141,37 +1255,38 @@
         }).format(value);
       },
       
-
       formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('pt-BR').format(date);
       },
       
-
       getPredecessorName(predecessorId) {
         if (!predecessorId) return '';
         const predecessor = this.tasks.find(task => task.id === predecessorId);
         return predecessor ? predecessor.description : '';
       },
       
-
       getProjectTasksCount(projectId) {
         return this.tasks.filter(task => task.projectId === projectId).length;
       },
       
-
       openProjectModal(project) {
         this.editingProject = project;
         
         if (project) {
-          this.projectForm = { ...project };
+          this.projectForm = {
+            nome: project.name,
+            descricao: project.description,
+            status: project.status,
+            orcamento: project.budget
+          };
         } else {
           this.projectForm = {
-            name: '',
-            description: '',
-            status: 'active',
-            budget: 0
+            nome: '',
+            descricao: '',
+            status: 'ativo',
+            orcamento: 0
           };
         }
         
@@ -1183,35 +1298,6 @@
         this.editingProject = null;
       },
 
-      saveProject() {
-        if (!this.projectForm.name) {
-          alert('O nome do projeto é obrigatório');
-          return;
-        }
-
-        const duplicateName = this.projects.find(p => 
-          p.name.toLowerCase() === this.projectForm.name.toLowerCase() && 
-          p.id !== (this.editingProject?.id)
-        );
-        
-        if (duplicateName) {
-          alert('Já existe um projeto com este nome');
-          return;
-        }
-        
-        if (this.editingProject) {
-          const index = this.projects.findIndex(p => p.id === this.editingProject.id);
-          if (index !== -1) {
-            this.projects[index] = { ...this.projectForm, id: this.editingProject.id };
-          }
-        } else {
-          const newId = Math.max(0, ...this.projects.map(p => p.id)) + 1;
-          this.projects.push({ ...this.projectForm, id: newId });
-        }
-        
-        this.closeProjectModal();
-      },
-
       confirmDelete(project) {
         this.projectToDelete = project;
         this.showDeleteModal = true;
@@ -1221,51 +1307,32 @@
         this.showDeleteModal = false;
         this.projectToDelete = null;
       },
-
-      deleteProject() {
-        if (this.projectToDelete && !this.hasProjectTasks) {
-          const index = this.projects.findIndex(p => p.id === this.projectToDelete.id);
-          if (index !== -1) {
-            this.projects.splice(index, 1);
-          }
-          this.closeDeleteModal();
-        }
-      },
       
-
       viewProject(project) {
         this.projectToView = project;
         this.showViewModal = true;
       },
       
-
       closeViewModal() {
         this.showViewModal = false;
         this.projectToView = null;
       },
       
-
       viewTasks(project) {
         this.selectedProject = project;
       },
       
-
       closeTasksView() {
         this.selectedProject = null;
       },
       
-
-      
-
       openTaskModal(task) {
         this.editingTask = task;
         this.dateError = '';
         
         if (task) {
-
           this.taskForm = { ...task };
         } else {
-
           this.taskForm = {
             description: '',
             startDate: '',
@@ -1278,21 +1345,18 @@
         this.showTaskModal = true;
       },
       
-
       closeTaskModal() {
         this.showTaskModal = false;
         this.editingTask = null;
         this.dateError = '';
       },
       
-
       saveTask() {
         if (!this.taskForm.description) {
           alert('A descrição da tarefa é obrigatória');
           return;
         }
         
-
         if (this.taskForm.startDate && this.taskForm.endDate) {
           if (new Date(this.taskForm.endDate) < new Date(this.taskForm.startDate)) {
             this.dateError = 'A data de fim não pode ser anterior à data de início';
@@ -1300,7 +1364,6 @@
           }
         }
         
-
         const duplicateDescription = this.projectTasks.find(t => 
           t.description.toLowerCase() === this.taskForm.description.toLowerCase() && 
           t.id !== (this.editingTask?.id)
@@ -1312,7 +1375,6 @@
         }
         
         if (this.editingTask) {
-
           const index = this.tasks.findIndex(t => t.id === this.editingTask.id);
           if (index !== -1) {
             this.tasks[index] = { 
@@ -1322,7 +1384,6 @@
             };
           }
         } else {
-
           const newId = Math.max(0, ...this.tasks.map(t => t.id)) + 1;
           this.tasks.push({ 
             ...this.taskForm, 
@@ -1334,19 +1395,16 @@
         this.closeTaskModal();
       },
       
-
       confirmDeleteTask(task) {
         this.taskToDelete = task;
         this.showDeleteTaskModal = true;
       },
       
-
       closeDeleteTaskModal() {
         this.showDeleteTaskModal = false;
         this.taskToDelete = null;
       },
       
-
       deleteTask() {
         if (this.taskToDelete && !this.isTaskPredecessor) {
           const index = this.tasks.findIndex(t => t.id === this.taskToDelete.id);
@@ -1357,56 +1415,146 @@
         this.closeDeleteTaskModal();
       },
       
-
       viewTask(task) {
         this.taskToView = task;
         this.showViewTaskModal = true;
       },
       
-
       closeViewTaskModal() {
         this.showViewTaskModal = false;
         this.taskToView = null;
       },
       
-
       toggleTaskStatus(task) {
         const index = this.tasks.findIndex(t => t.id === task.id);
         if (index !== -1) {
           this.tasks[index].status = task.status === 'completed' ? 'not_completed' : 'completed';
         }
       },
-      
 
-      
-
-      login() {
-        if (!this.loginForm.email || !this.loginForm.password) {
-          alert('Preencha todos os campos');
-          return;
-        }
-        
-
-        alert('Login realizado com sucesso!');
-        this.showLoginModal = false;
+      redirecionamento(){
+        router.visit(route('paginaInicial'));
       },
       
-
-      register() {
-        if (!this.registerForm.name || !this.registerForm.email || !this.registerForm.password || !this.registerForm.passwordConfirm) {
-          alert('Preencha todos os campos');
+      async login() {
+        // Limpa erros anteriores
+        this.loginError = '';
+        this.showAlert = false;
+        
+        // Validação básica
+        if (!this.loginForm.email || !this.loginForm.password) {
+          this.showNotification('Preencha todos os campos', 'warning');
           return;
         }
         
-        if (this.registerForm.password !== this.registerForm.passwordConfirm) {
+        try {
+          const response = await axios.post('/login', this.loginForm);
+          this.showNotification('Login realizado com sucesso!', 'success');
+          this.showLoginModal = false;
+          this.redirecionamento();
+        } catch (error) {
+          console.log('Erro ao realizar login:', error);
+          
+          if (error.response) {
+            if (error.response.status === 422) {
+              // Erros de validação
+              this.loginError = 'Credenciais inválidas. Verifique seu email e senha.';
+            } else if (error.response.status === 429) {
+              this.loginError = 'Muitas tentativas de login. Tente novamente mais tarde.';
+            } else if (error.response.status === 401) {
+              this.loginError = 'Email ou senha incorretos.';
+            } else {
+              this.loginError = 'Ocorreu um erro durante o login. Tente novamente.';
+            }
+          } else {
+            this.loginError = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+          }
+          
+          this.showNotification(this.loginError, 'error');
+        }
+      },
+
+      async register() {
+        // Limpa erros anteriores
+        this.passwordError = '';
+        this.registerErrors = { name: '', email: '', password: '' };
+        this.showAlert = false;
+        
+        // Validação básica dos campos
+        if (!this.registerForm.name || !this.registerForm.email || !this.registerForm.password || !this.registerForm.password_confirmation) {
+          this.showNotification('Preencha todos os campos', 'warning');
+          return;
+        }
+        
+        // Validação de senha
+        if (this.registerForm.password.length < 8) {
+          this.passwordError = 'A senha deve ter pelo menos 8 caracteres';
+          this.registerErrors.password = this.passwordError;
+          this.showNotification(this.passwordError, 'warning');
+          return;
+        }
+        
+        // Validação de confirmação de senha
+        if (this.registerForm.password !== this.registerForm.password_confirmation) {
           this.passwordError = 'As senhas não coincidem';
+          this.registerErrors.password = this.passwordError;
+          this.showNotification(this.passwordError, 'warning');
           return;
         }
         
+        try {
+          const response = await axios.post('/register', this.registerForm);
+          this.showNotification('Cadastro realizado com sucesso!', 'success');
+          this.showRegisterModal = false;
+          this.redirecionamento();
+        } catch (error) {
+          console.log('Erro ao realizar cadastro:', error);
+          
+          if (error.response && error.response.data && error.response.data.errors) {
+            // Processando erros de validação do Laravel
+            const errors = error.response.data.errors;
+            
+            if (errors.name) {
+              this.registerErrors.name = errors.name[0];
+            }
+            
+            if (errors.email) {
+              this.registerErrors.email = errors.email[0];
+            }
+            
+            if (errors.password) {
+              this.registerErrors.password = errors.password[0];
+              this.passwordError = errors.password[0];
+            }
+            
+            this.showNotification('Corrija os erros de validação', 'error');
+          } else {
+            this.showNotification('Falha no cadastro. Tente novamente.', 'error');
+          }
+        }
+      },
 
-        alert('Cadastro realizado com sucesso!');
-        this.showRegisterModal = false;
-      }
+      showNotification(message, type = 'error') {
+          this.alertMessage = message;
+          this.alertType = type;
+          this.showAlert = true;
+
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 5000);
+        },
+
+      async logout() {
+        try {
+          const response = await axios.post('/logout');
+          this.autenticao = false;
+          this.nomeUsuario = '';
+          this.redirecionamento();
+        } catch (error) {
+          console.error('Erro ao realizar cadastro:', error);
+          alert(`Falha no cadastro: ${error.message}`);
+        }
+      },
     }
   }
 </script>
