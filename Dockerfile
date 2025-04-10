@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     && docker-php-ext-install pdo pdo_mysql zip
 
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY .docker/php/php.ini /usr/local/etc/php/php.ini
@@ -22,6 +25,8 @@ COPY .docker/wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 WORKDIR /var/www/html
+
+COPY package*.json ./
 RUN npm install
 RUN npm install axios
 RUN npm run build
