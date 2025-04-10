@@ -27,9 +27,13 @@ RUN chmod +x /wait-for-it.sh
 WORKDIR /var/www/html
 
 COPY package*.json ./
+COPY vite.config.js ./
+COPY index.html ./
+COPY src/ ./src/
+COPY public/ ./public/
+
 RUN npm install
 RUN npm install axios
-RUN npm run build
 
 COPY . .
 
