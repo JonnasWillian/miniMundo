@@ -805,7 +805,7 @@
   import { usePage, router } from '@inertiajs/vue3'
    
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = 'http://localhost:8080';
+  axios.defaults.baseURL = 'http://localhost:8081';
   export default {
     name: 'ProjectManagement',
     
@@ -1051,7 +1051,7 @@
         this.error = null;
         
         try {
-          const response = await fetch('http://localhost:8080/api/projeto');
+          const response = await fetch('http://localhost:8081/api/projeto');
           
           if (!response.ok) {
             throw new Error(`Erro ao buscar projetos: ${response.status}`);
@@ -1115,7 +1115,7 @@
           let response;
           
           if (this.editingProject) {
-            response = await fetch(`http://localhost:8080/api/projeto/${this.editingProject.id}`, {
+            response = await fetch(`http://localhost:8081/api/projeto/${this.editingProject.id}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'
@@ -1123,7 +1123,7 @@
               body: JSON.stringify(projectData)
             });
           } else {
-            response = await fetch('http://localhost:8080/api/projeto', {
+            response = await fetch('http://localhost:8081/api/projeto', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -1147,7 +1147,7 @@
       async deleteProject() {
         if (this.projectToDelete && !this.hasProjectTasks) {
           try {
-            const response = await fetch(`http://localhost:8080/api/projeto/${this.projectToDelete.id}`, {
+            const response = await fetch(`http://localhost:8081/api/projeto/${this.projectToDelete.id}`, {
               method: 'DELETE'
             });
 
@@ -1332,7 +1332,7 @@
           let response;
           
           if (this.editingTask) {
-            response = await fetch(`http://localhost:8080/api/task/${this.editingTask.id}`, {
+            response = await fetch(`http://localhost:8081/api/task/${this.editingTask.id}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'
@@ -1340,7 +1340,7 @@
               body: JSON.stringify(taskData)
             });
           } else {
-            response = await fetch('http://localhost:8080/api/task', {
+            response = await fetch('http://localhost:8081/api/task', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -1393,7 +1393,7 @@
         }
 
         try {
-          const response = await fetch(`http://localhost:8080/api/task/${this.taskToDelete.id}`, {
+          const response = await fetch(`http://localhost:8081/api/task/${this.taskToDelete.id}`, {
             method: 'DELETE'
           });
 
@@ -1432,7 +1432,7 @@
         try {
           const newStatus = task.status === 'completa' ? 'incompleta' : 'completa';
           
-          const response = await fetch(`http://localhost:8080/api/task/${task.id}`, {
+          const response = await fetch(`http://localhost:8081/api/task/${task.id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
