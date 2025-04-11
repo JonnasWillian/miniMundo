@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 use App\Models\Projeto as ProjetoDb;
+use App\Models\Task;
 
 class Projeto extends Controller
 {
     public function view()
     {
-        $projetos = ProjetoDb::orderBy('created_at', 'desc')->get();
+        $projetos = ProjetoDb::with(['tasks' => function($query) {
+            $query->orderBy('data_inicial', 'asc');
+        }])->orderBy('created_at', 'desc')->get();
 
         return response()->json($projetos);
     }
@@ -66,6 +69,12 @@ class Projeto extends Controller
     {
         try {
             $projeto = ProjetoDb::findOrFail($id);
+            
+            $task = Task::where(['projeto_id' => $id])->get();
+            if ($task->all() != null) {
+                return response()->json(['error' => 'O projeto possui tasks inacabadas'], 400);
+            }
+
             $projeto->delete();
 
             return response()->json(['message' => 'Projeto deletado com sucesso'], 201);
@@ -74,7 +83,7 @@ class Projeto extends Controller
                 'erros' => $error->errors()
             ], 422);
         } catch (\Exception $error) {
-            return response()->json(['error' => 'Projeto não encontrado'], 201);
+            return response()->json(['error' => 'Projeto não encontrado'], 400);
         }
     }
 }

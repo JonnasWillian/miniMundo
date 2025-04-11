@@ -89,7 +89,7 @@
                             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
                           </svg>
-                          Tarefas ({{ getProjectTasksCount(project.id) }})
+                          Tarefas ({{ project.tasks ? project.tasks.length : 0 }})
                         </span>
                       </button>
                       <button @click="viewProject(project)" class="p-1.5 text-gray-500 hover:text-gray-700 focus:outline-none" title="Visualizar">
@@ -224,6 +224,7 @@
             </h2>
             <div class="flex space-x-4">
               <button 
+                v-if="user"
                 @click="openTaskModal(null)" 
                 class="px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
@@ -289,11 +290,7 @@
                       </p>
                     </div>
                     <div class="flex space-x-2">
-                      <button 
-                        @click="viewTask(task)" 
-                        class="p-1.5 text-gray-500 hover:text-gray-700 focus:outline-none"
-                        title="Visualizar"
-                      >
+                      <button @click="viewTask(task)" class="p-1.5 text-gray-500 hover:text-gray-700 focus:outline-none" title="Visualizar">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                           <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
@@ -369,51 +366,26 @@
               </div>
               <div class="mb-4">
                 <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                <textarea 
-                  id="description" 
-                  v-model="projectForm.descricao" 
-                  rows="3"
-                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                ></textarea>
+                <textarea id="description" v-model="projectForm.descricao" rows="3" maxlength="200"class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"></textarea>
               </div>
               <div class="mb-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">Status *</label>
-                <select 
-                  id="status" 
-                  v-model="projectForm.status" 
-                  required
-                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                >
+                <select id="status" v-model="projectForm.status" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
                   <option value="ativo">Ativo</option>
                   <option value="desativado">Inativo</option>
                 </select>
               </div>
               <div class="mb-4">
                 <label for="budget" class="block text-sm font-medium text-gray-700">Orçamento</label>
-                <input 
-                  type="number" 
-                  id="budget" 
-                  v-model="projectForm.orcamento" 
-                  min="0"
-                  step="0.01"
-                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                />
+                <input id="budget" :value="formatarMoeda(projectForm.orcamento)" @input="atualizarOrcamento($event)" min="0" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"/>
               </div>
             </form>
           </div>
           <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-            <button 
-              type="button" 
-              @click="closeProjectModal" 
-              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-            >
+            <button type="button" @click="closeProjectModal" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
               Cancelar
             </button>
-            <button 
-              type="button" 
-              @click="saveProject" 
-              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-            >
+            <button type="button" @click="saveProject" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
               Salvar
             </button>
           </div>
@@ -435,17 +407,11 @@
             </p>
           </div>
           <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-            <button 
-              type="button" 
-              @click="closeDeleteModal" 
-              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-            >
+            <button type="button" @click="closeDeleteModal" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
               Cancelar
             </button>
-            <button 
-              type="button" 
-              @click="deleteProject" 
-              :disabled="hasProjectTasks"
+            <button type="button" 
+              @click="deleteProject" :disabled="hasProjectTasks"
               :class="[
                 'px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white',
                 hasProjectTasks 
@@ -547,19 +513,9 @@
               </div>
               <div class="mb-4">
                 <label for="taskPredecessor" class="block text-sm font-medium text-gray-700">Tarefa Predecessora</label>
-                <select 
-                  id="taskPredecessor" 
-                  v-model="taskForm.tarefa_processadora"
-                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
-                >
+                <select id="taskPredecessor" v-model="taskForm.tarefa_processadora" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
                   <option :value="null">Nenhuma</option>
-                  <option 
-                    v-for="task in availablePredecessors" 
-                    :key="task.id" 
-                    :value="task.id"
-                  >
-                    {{ task.descricao }}
-                  </option>
+                  <option v-for="task in availablePredecessors" :key="task.id" :value="task.id">{{ task.descricao }}</option>
                 </select>
               </div>
               <div class="mb-4">
@@ -857,62 +813,7 @@
       return {
         projects: [],
         user: usePage().props.auth.user,
-        tasks: [
-          {
-            id: 1,
-            projeto_id: 1,
-            descricao: 'Levantamento de requisitos',
-            data_inicial: '2023-01-10',
-            data_final: '2023-01-25',
-            tarefa_processadora: null,
-            status: 'completa'
-          },
-          {
-            id: 2,
-            projeto_id: 1,
-            descricao: 'Modelagem de dados',
-            data_inicial: '2023-01-26',
-            data_final: '2023-02-15',
-            tarefa_processadora: 1,
-            status: 'completa'
-          },
-          {
-            id: 3,
-            projeto_id: 1,
-            descricao: 'Desenvolvimento do backend',
-            data_inicial: '2023-02-16',
-            data_final: '2023-04-10',
-            tarefa_processadora: 2,
-            status: 'incompleta'
-          },
-          {
-            id: 4,
-            projeto_id: 1,
-            descricao: 'Desenvolvimento do frontend',
-            data_inicial: '2023-03-01',
-            data_final: '2023-04-20',
-            tarefa_processadora: null,
-            status: 'incompleta'
-          },
-          {
-            id: 5,
-            projeto_id: 2,
-            descricao: 'Prototipação de interfaces',
-            data_inicial: '2023-02-01',
-            data_final: '2023-02-28',
-            tarefa_processadora: null,
-            status: 'completa'
-          },
-          {
-            id: 6,
-            projeto_id: 2,
-            descricao: 'Desenvolvimento de APIs',
-            data_inicial: '2023-03-01',
-            data_final: '2023-04-15',
-            tarefa_processadora: 5,
-            status: 'incompleta'
-          }
-        ],
+        tasks: [],
 
         currentPage: 1,
         itemsPerPage: 5,
@@ -1069,7 +970,7 @@
 
       projectTasks() {
         if (!this.selectedProject) return [];
-        return this.tasks.filter(task => task.projeto_id === this.selectedProject.id);
+        return this.selectedProject.tasks || [];
       },
 
       filteredTasks() {
@@ -1088,21 +989,30 @@
       },
 
       availablePredecessors() {
-        if (!this.selectedProject) return [];
+        if (!this.selectedProject || !this.selectedProject.tasks) return [];
 
-        return this.projectTasks.filter(task => {
+        return this.selectedProject.tasks.filter(task => {
           if (this.editingTask && task.id === this.editingTask.id) {
             return false;
           }
 
           if (this.editingTask) {
-            let currentTask = task;
-            while (currentTask.tarefa_processadora) {
-              if (currentTask.tarefa_processadora === this.editingTask.id) {
+            let currentTaskId = task.tarefa_processadora;
+            let visited = new Set();
+
+            while (currentTaskId) {
+              if (visited.has(currentTaskId)) {
+                break;
+              }
+
+              visited.add(currentTaskId);
+
+              if (currentTaskId === this.editingTask.id) {
                 return false;
               }
-              currentTask = this.tasks.find(t => t.id === currentTask.tarefa_processadora);
-              if (!currentTask) break;
+
+              const nextTask = this.selectedProject.tasks.find(t => t.id === currentTaskId);
+              currentTaskId = nextTask ? nextTask.tarefa_processadora : null;
             }
           }
           
@@ -1112,7 +1022,14 @@
 
       isTaskPredecessor() {
         if (!this.taskToDelete) return false;
-        return this.tasks.some(task => task.tarefa_processadora === this.taskToDelete.id);
+
+        for (const project of this.projects) {
+          if (project.tasks && project.tasks.some(task => task.tarefa_processadora === this.taskToDelete.id)) {
+            return true;
+          }
+        }
+
+        return false;
       },
 
       hasProjectTasks() {
@@ -1147,14 +1064,28 @@
             name: item.nome || item.name,
             description: item.descricao || item.description,
             status: item.status,
-            budget: item.orcamento || item.budget
+            budget: item.orcamento || item.budget,
+            tasks: item.tasks || []
           }));
         } catch (error) {
-          console.error('Erro ao buscar projetos:', error);
           this.error = error.message || 'Erro ao carregar projetos';
+          this.showNotification('Erro ao carregar projetos: ' + error.message, 'error');
         } finally {
           this.loading = false;
         }
+      },
+
+      formatarMoeda(valor) {
+          return (valor || 0).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          })
+        },
+
+        atualizarOrcamento(event) {
+          let valor = event.target.value.replace(/\D/g, ''); 
+          valor = parseFloat(valor) / 100;
+          this.projectForm.orcamento = isNaN(valor) ? 0 : valor;
       },
 
       async saveProject() {
@@ -1209,7 +1140,7 @@
           this.closeProjectModal();
         } catch (error) {
           console.error('Erro ao salvar projeto:', error);
-          alert(`Erro ao salvar projeto: ${error.message}`);
+          this.showNotification(`Erro ao salvar projeto: ${error.message}`, 'error');
         }
       },
 
@@ -1219,7 +1150,7 @@
             const response = await fetch(`http://localhost:8080/api/projeto/${this.projectToDelete.id}`, {
               method: 'DELETE'
             });
-            
+
             if (!response.ok) {
               throw new Error(`Erro ao excluir projeto: ${response.status}`);
             }
@@ -1228,7 +1159,7 @@
             this.closeDeleteModal();
           } catch (error) {
             console.error('Erro ao excluir projeto:', error);
-            alert(`Erro ao excluir projeto: ${error.message}`);
+            this.showNotification('Este projeto contém tarefas e não pode ser excluído.', 'warning');
           }
         }
       },
@@ -1263,14 +1194,25 @@
         return new Intl.DateTimeFormat('pt-BR').format(date);
       },
       
-      getPredecessorName(tarefa_processadora) {
-        if (!tarefa_processadora) return '';
-        const predecessor = this.tasks.find(task => task.id === tarefa_processadora);
-        return predecessor ? predecessor.description : '';
+      getPredecessorName(tarefa_processadora_id) {
+        if (!tarefa_processadora_id) return '';
+
+        for (const project of this.projects) {
+          for (const task of project.tasks) {
+            if (task.id === tarefa_processadora_id) {
+              return task.descricao;
+            }
+          }
+        }
+        
+        return 'Tarefa não encontrada';
       },
       
       getProjectTasksCount(projeto_id) {
-        return this.tasks.filter(task => task.projeto_id === projeto_id).length;
+        if (!projeto_id) return 0;
+        
+        const project = this.projects.find(p => p.id === projeto_id);
+        return project && project.tasks ? project.tasks.length : 0;
       },
       
       openProjectModal(project) {
@@ -1353,48 +1295,83 @@
         this.dateError = '';
       },
       
-      saveTask() {
-        if (!this.taskForm.description) {
-          alert('A descrição da tarefa é obrigatória');
+      async saveTask() {
+        if (!this.taskForm.descricao) {
+          this.showNotification('A descrição da tarefa é obrigatória', 'warning');
           return;
         }
         
         if (this.taskForm.data_inicial && this.taskForm.data_final) {
           if (new Date(this.taskForm.data_final) < new Date(this.taskForm.data_inicial)) {
             this.dateError = 'A data de fim não pode ser anterior à data de início';
+            this.showNotification(this.dateError, 'warning');
             return;
           }
         }
-        
+
         const duplicateDescription = this.projectTasks.find(t => 
-          t.description.toLowerCase() === this.taskForm.description.toLowerCase() && 
+          t.descricao.toLowerCase() === this.taskForm.descricao.toLowerCase() && 
           t.id !== (this.editingTask?.id)
         );
-        
+
         if (duplicateDescription) {
-          alert('Já existe uma tarefa com esta descrição neste projeto');
+          this.showNotification('Já existe uma tarefa com esta descrição neste projeto', 'warning');
           return;
         }
-        
-        if (this.editingTask) {
-          const index = this.tasks.findIndex(t => t.id === this.editingTask.id);
-          if (index !== -1) {
-            this.tasks[index] = { 
-              ...this.taskForm, 
-              id: this.editingTask.id,
-              projeto_id: this.selectedProject.id
-            };
+
+        try {
+          const taskData = {
+            descricao: this.taskForm.descricao,
+            status: this.taskForm.status,
+            data_inicial: this.taskForm.data_inicial,
+            data_final: this.taskForm.data_final,
+            projeto_id: this.selectedProject.id,
+            tarefa_processadora: this.taskForm.tarefa_processadora
+          };
+          
+          let response;
+          
+          if (this.editingTask) {
+            response = await fetch(`http://localhost:8080/api/task/${this.editingTask.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(taskData)
+            });
+          } else {
+            response = await fetch('http://localhost:8080/api/task', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(taskData)
+            });
           }
-        } else {
-          const newId = Math.max(0, ...this.tasks.map(t => t.id)) + 1;
-          this.tasks.push({ 
-            ...this.taskForm, 
-            id: newId,
-            projeto_id: this.selectedProject.id
-          });
+          
+          if (!response.ok) {
+            throw new Error(`Erro ao salvar tarefa: ${response.status}`);
+          }
+
+          await this.fetchProjects();
+
+          if (this.selectedProject) {
+            const updatedProject = this.projects.find(p => p.id === this.selectedProject.id);
+            if (updatedProject) {
+              this.selectedProject = updatedProject;
+            }
+          }
+
+          this.showNotification(
+            this.editingTask ? 'Tarefa atualizada com sucesso!' : 'Tarefa criada com sucesso!', 
+            'success'
+          );
+
+          this.closeTaskModal();
+        } catch (error) {
+          console.error('Erro ao salvar tarefa:', error);
+          this.showNotification(`Erro ao salvar tarefa: ${error.message}`, 'error');
         }
-        
-        this.closeTaskModal();
       },
       
       confirmDeleteTask(task) {
@@ -1407,14 +1384,38 @@
         this.taskToDelete = null;
       },
       
-      deleteTask() {
-        if (this.taskToDelete && !this.isTaskPredecessor) {
-          const index = this.tasks.findIndex(t => t.id === this.taskToDelete.id);
-          if (index !== -1) {
-            this.tasks.splice(index, 1);
-          }
+      async deleteTask() {
+        if (!this.taskToDelete) return;
+
+        if (this.isTaskPredecessor) {
+          this.showNotification('Esta tarefa não pode ser excluída pois é predecessora de outra tarefa.', 'warning');
+          return;
         }
-        this.closeDeleteTaskModal();
+
+        try {
+          const response = await fetch(`http://localhost:8080/api/task/${this.taskToDelete.id}`, {
+            method: 'DELETE'
+          });
+
+          if (!response.ok) {
+            throw new Error(`Erro ao excluir tarefa: ${response.message}`);
+          }
+
+          await this.fetchProjects();
+
+          if (this.selectedProject) {
+            const updatedProject = this.projects.find(p => p.id === this.selectedProject.id);
+            if (updatedProject) {
+              this.selectedProject = updatedProject;
+            }
+          }
+
+          this.showNotification('Tarefa excluída com sucesso!', 'success');
+          this.closeDeleteTaskModal();
+        } catch (error) {
+          console.error('Erro ao excluir tarefa:', error);
+          this.showNotification(`Erro ao excluir tarefa: ${error.message}`, 'error');
+        }
       },
       
       viewTask(task) {
@@ -1427,10 +1428,36 @@
         this.taskToView = null;
       },
       
-      toggleTaskStatus(task) {
-        const index = this.tasks.findIndex(t => t.id === task.id);
-        if (index !== -1) {
-          this.tasks[index].status = task.status === 'completa' ? 'incompleta' : 'completa';
+      async toggleTaskStatus(task) {
+        try {
+          const newStatus = task.status === 'completa' ? 'incompleta' : 'completa';
+          
+          const response = await fetch(`http://localhost:8080/api/task/${task.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              ...task,
+              status: newStatus
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Erro ao atualizar status da tarefa: ${response.status}`);
+          }
+
+          await this.fetchProjects();
+
+          if (this.selectedProject) {
+            const updatedProject = this.projects.find(p => p.id === this.selectedProject.id);
+            if (updatedProject) {
+              this.selectedProject = updatedProject;
+            }
+          }
+          
+        } catch (error) {
+          this.showNotification(`Erro ao atualizar status da tarefa: ${error.message}`, 'error');
         }
       },
 
@@ -1439,11 +1466,9 @@
       },
       
       async login() {
-        // Limpa erros anteriores
         this.loginError = '';
         this.showAlert = false;
-        
-        // Validação básica
+
         if (!this.loginForm.email || !this.loginForm.password) {
           this.showNotification('Preencha todos os campos', 'warning');
           return;
@@ -1459,7 +1484,6 @@
           
           if (error.response) {
             if (error.response.status === 422) {
-              // Erros de validação
               this.loginError = 'Credenciais inválidas. Verifique seu email e senha.';
             } else if (error.response.status === 429) {
               this.loginError = 'Muitas tentativas de login. Tente novamente mais tarde.';
@@ -1477,26 +1501,22 @@
       },
 
       async register() {
-        // Limpa erros anteriores
         this.passwordError = '';
         this.registerErrors = { name: '', email: '', password: '' };
         this.showAlert = false;
-        
-        // Validação básica dos campos
+
         if (!this.registerForm.name || !this.registerForm.email || !this.registerForm.password || !this.registerForm.password_confirmation) {
           this.showNotification('Preencha todos os campos', 'warning');
           return;
         }
-        
-        // Validação de senha
+
         if (this.registerForm.password.length < 8) {
           this.passwordError = 'A senha deve ter pelo menos 8 caracteres';
           this.registerErrors.password = this.passwordError;
           this.showNotification(this.passwordError, 'warning');
           return;
         }
-        
-        // Validação de confirmação de senha
+
         if (this.registerForm.password !== this.registerForm.password_confirmation) {
           this.passwordError = 'As senhas não coincidem';
           this.registerErrors.password = this.passwordError;
@@ -1513,7 +1533,6 @@
           console.log('Erro ao realizar cadastro:', error);
           
           if (error.response && error.response.data && error.response.data.errors) {
-            // Processando erros de validação do Laravel
             const errors = error.response.data.errors;
             
             if (errors.name) {
@@ -1554,7 +1573,7 @@
           this.redirecionamento();
         } catch (error) {
           console.error('Erro ao realizar cadastro:', error);
-          alert(`Falha no cadastro: ${error.message}`);
+          this.showNotification(`Erro ao realizar logout: ${error.message}`, 'error');
         }
       },
     }

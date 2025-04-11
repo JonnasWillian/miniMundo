@@ -20,4 +20,9 @@ class Task extends Model
         'data_final',
         'projeto_id'
     ];
+
+    public function projeto()
+    {
+        return $this->belongsTo(Projeto::class, 'projeto_id');
+    }
 }
